@@ -1,0 +1,38 @@
+"doctype": "html",
+  "html": {
+    "lang": "en",
+    "head": {
+      "meta": [
+        {
+          "charset": "UTF-8"
+        },
+        {
+          "http-equiv": "X-UA-Compatible",
+          "content": "IE=edge"
+        },
+        {
+          "name": "viewport",
+          "content": "width=device-width, initial-scale=1.0"
+        }
+      ],
+      "title": "Tela de Login",
+      "style": "\n        body {\n            font-family: Arial, Helvetica, sans-serif;\n            background-image: linear-gradient(45deg, cyan, yellow);\n        }\n        div{\n            background-color: rgba(0, 0, 0, 0.8);\n            position: absolute;\n            top: 50%;\n            left: 50%;\n            transform: translate(-50%,-50%);\n            padding: 80px;\n            border-radius: 15px;\n            color: white;\n        }\n\n        input{\n            padding: 15px;\n            border: none;\n            outline: none;\n            font-size: 15px;\n        }\n\n        button{\n            background-color: dodgerblue;\n            border: none;\n            padding: 15px;\n            width: 100%;\n            border-radius: 10px;\n            color: white;\n            font-size: 15px;\n            cursor: pointer;\n        }\n        button:hover{\n            background-color: deepskyblue;\n        }\n\n    "
+    },
+    "body": {
+      "div": {
+        "h1": "Login",
+        "input": [
+          {
+            "type": "text",
+            "placeholder": "Email"
+          },
+          {
+            "type": "password",
+            "placeholder": "Senha"
+          }
+        ],
+        "button": "Entrar"
+      }
+    }
+  }
+}

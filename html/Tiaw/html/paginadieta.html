@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dieta</title>
+
+  <style>
+    .imagem-user {
+      width: 120px;
+      height: auto;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+    .exercise-container {
+      width: 800px;
+      margin: 0 auto;
+      background-color: blue; 
+      padding: 20px;
+      border-radius: 5px;
+    }
+
+    .user-info {
+      text-align: center;
+      margin-bottom: 20px;
+      
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: cyan;
+      background-image:linear-gradient(45deg,blue,cyan);
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .exercise {
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    .exercise-image {
+      width: 200px;
+      margin-right: 20px;
+    }
+
+    .exercise-content {
+      flex-grow: 1;
+    }
+
+    .exercise h2 {
+      margin-bottom: 10px;
+    }
+
+    .exercise p {
+      margin: 0;
+    }
+
+    .exercise-button {
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <a href="../index/index.html"><h1>Home</h1></a>
+  <h1>Dieta</h1>
+
+  <div class="user-info">
+    <h2>Informações do Usuário:</h2>
+    <h1>Fábio Andrade</h1>
+    <img class="imagem-user" src="img/WhatsApp Image 2023-04-11 at 17.36.17.jpeg" alt="">
+    <h2>Peso: 75kg</h2>
+    <h2>Objetivo: Hipertrofia</h2>
+    <h1>SEGUNDA-FEIRA (2500kcal)</h1>
+
+  </div>
+
+  <div class="exercise-container" id="exercisesContainer"></div>
+  <div id="dialogContainer"></div>
+
+  <script>
+    // Exercícios
+    var exercises = [
+      {
+        name: "Cafe da manhã (500kcal)",
+        description: "2 ovos mexidos, 2 fatias de pão integral, 1 colher de sopa de manteiga de amendoim, 1 xícara de chá verde, 1 maçã",
+        image: "img/cafe.jpeg"
+      },
+      {
+        name: "Almoço (1000kcal)",
+        description: "150g de frango grelhado, 1 xícara de arroz integral cozido, 1 xícara de brócolis cozido no vapor, 1 colher de sopa de azeite de oliva, 1 salada de alface, tomate e pepino com vinagrete, 1 laranja, 1 copo de suco natural de limão, 1 porção de gelatina sem açúcar",
+        image: "img/almoço.jpeg"
+      },
+      {
+        name: "Jantar (1000kcal)",
+        description: "150g de peito de frango grelhado, 1 xícara de quinoa cozida, 1 xícara de legumes no vapor, 1 colher de sopa de azeite de oliva, 1 salada de folhas verdes com tomate e pepino, 1 fatia de melancia, 1 iogurte grego light, 1 quadrado de chocolate amargo",
+        image: "img/janta.jpeg"
+      }
+      
+    ];
+
+    // Função para salvar os exercícios atualizados no localStorage
+    function saveExercises() {
+      localStorage.setItem("exercises", JSON.stringify(exercises));
+    }
+
+    // Função para gerar o conteúdo HTML dos exercícios
+    function generateExerciseHTML(exercise, index) {
+      var exerciseHTML = '<div class="exercise">';
+      exerciseHTML += '<img class="exercise-image" src="' + exercise.image + '" alt="' + exercise.name + '">';
+      exerciseHTML += '<div class="exercise-content">';
+      exerciseHTML += '<h2>' + exercise.name + '</h2>';
+      exerciseHTML += '<p>' + exercise.description + '</p>';
+      exerciseHTML += '</div>';
+      exerciseHTML += '<button class="exercise-button" onclick="changeExercise(' + index + ')">Trocar</button>';
+      exerciseHTML += '</div>';
+      return exerciseHTML;
+    }
+
+    // Preenche o container de exercícios com os dados armazenados
+    var exercisesContainer = document.getElementById("exercisesContainer");
+    exercises.forEach(function(exercise, index) {
+      exercisesContainer.innerHTML += generateExerciseHTML(exercise, index);
+    });
+
+      var options = [
+        {
+          name: "Cafe da manhã 2",
+          description: "1 xícara de aveia com água, 1 colher de sopa de mel, 1 colher de sopa de sementes de chia, 1/2 xícara de mirtilos, 1 xícara de chá de camomila, 1 laranja",
+          image: "img/cafe2.jpeg"
+        },
+        {
+          name: "Almoço 2",
+          description: "150g de salmão grelhado, 1 batata média assada com casca, 1 xícara de couve-flor cozida no vapor, 1 colher de sopa de azeite de oliva, 1 salada de rúcula, tomate cereja e queijo feta com vinagrete balsâmico, 1 maçã, 1 copo de suco natural de laranja",
+          image: "img/almoço2.jpeg"
+        },
+        {
+          name: "Jantar 2",
+          description: "200g de tofu mexido com legumes, 1 xícara de macarrão integral cozido, 1 xícara de brócolis cozido no vapor, 1 colher de sopa de azeite de oliva, 1 salada de alface, cenoura ralada e tomate cereja com molho de mostarda, 1 fatia de melão, 1 iogurte grego light",
+          image: "img/janta2.jpg"
+        }
+      ];
+    function changeExercise(index) {
+      var optionsHTML = '';
+      options.forEach(function(option, optionIndex) {
+        optionsHTML += '<option value="' + optionIndex + '">' + option.name + '</option>';
+      });
+
+      var selectHTML = '<select id="exerciseSelect">' + optionsHTML + '</select>';
+
+      var dialogHTML = '<div class="dialog">';
+      dialogHTML += '<p>Selecione uma refeição:</p>';
+      dialogHTML += selectHTML;
+      dialogHTML += '<button onclick="replaceExercise(' + index + ')">Confirmar</button>';
+      dialogHTML += '</div>';
+
+      var dialogContainer = document.getElementById("dialogContainer");
+      dialogContainer.innerHTML = dialogHTML;
+    }
+
+    // Função para substituir um exercício selecionado
+    function replaceExercise(index) {
+      var selectElement = document.getElementById("exerciseSelect");
+      var newExerciseIndex = parseInt(selectElement.value);
+      var selectedOption = options[newExerciseIndex];
+
+      exercises[index].name = selectedOption.name;
+      exercises[index].description = selectedOption.description;
+      exercises[index].image = selectedOption.image;
+
+      var exerciseElement = document.getElementsByClassName("exercise")[index];
+      exerciseElement.getElementsByTagName("h2")[0].textContent = selectedOption.name;
+      exerciseElement.getElementsByTagName("p")[0].textContent = selectedOption.description;
+      exerciseElement.getElementsByTagName("img")[0].src = selectedOption.image;
+
+      saveExercises();
+
+      var dialogContainer = document.getElementById("dialogContainer");
+      dialogContainer.innerHTML = '';
+    }
+  </script>
+</body>
+</html>
+
+

@@ -1,0 +1,31 @@
+{
+    "doctype": "<!DOCTYPE html>",
+    "html": {
+        "lang": "en",
+        "head": {
+            "meta": [
+                {
+                    "charset": "UTF-8"
+                },
+                {
+                    "http-equiv": "X-UA-Compatible",
+                    "content": "IE=edge"
+                },
+                {
+                    "name": "viewport",
+                    "content": "width=device-width, initial-scale=1.0"
+                }
+            ],
+            "title": "Formulário | GN",
+            "style": "\n        body{\n            font-family: Arial, Helvetica, sans-serif;\n            background-image: linear-gradient(to right, rgb(20, 147, 220), rgb(17, 54, 71));\n        }\n        .box{\n            color: white;\n            position: absolute;\n            top: 50%;\n            left: 50%;\n            transform: translate(-50%,-50%);\n            background-color: rgba(0, 0, 0, 0.6);\n            padding: 15px;\n            border-radius: 15px;\n            width: 20%;\n        }\n        fieldset{\n            border: 3px solid dodgerblue;\n        }\n        legend{\n            border: 1px solid dodgerblue;\n            padding: 10px;\n            text-align: center;\n            background-color: dodgerblue;\n            border-radius: 8px;\n        }\n        .inputBox{\n            position: relative;\n        }\n        .inputUser{\n            background: none;\n            border: none;\n            border-bottom: 1px solid white;\n            outline: none;\n            color: white;\n            font-size: 15px;\n            width: 100%;\n            letter-spacing: 2px;\n        }\n        .labelInput{\n            position: absolute;\n            top: 0px;\n            left: 0px;\n            pointer-events: none;\n            transition: .5s;\n        }\n        .inputUser:focus ~ .labelInput,\n        .inputUser:valid ~ .labelInput{\n            top: -20px;\n            font-size: 12px;\n            color: dodgerblue;\n        }\n        #data_nascimento{\n            border: none;\n            padding: 8px;\n            border-radius: 10px;\n            outline: none;\n            font-size: 15px;\n        }\n        #submit{\n            background-image: linear-gradient(to right,rgb(0, 92, 197), rgb(90, 20, 220));\n            width: 100%;\n            border: none;\n            padding: 15px;\n            color: white;\n            font-size: 15px;\n            cursor: pointer;\n            border-radius: 10px;\n        }\n        #submit:hover{\n            background-image: linear-gradient(to right,rgb(0, 80, 172), rgb(80, 19, 195));\n        }\n    "
+        },
+        "body": {
+            "div": {
+                "class": "box",
+                "form": {
+                    "action": "",
+                    "fieldset": {
+                        "legend": {
+                            "b": "Fórmulário de Clientes"
+                        },
+                        "br1": {},

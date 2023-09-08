@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Exercícios Recomendados</title>
+
+  <style>
+    .imagem-user {
+      width: 120px;
+      height: auto;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+    .exercise-container {
+      width: 800px;
+      margin: 0 auto;
+      background-color: blue; 
+      padding: 20px;
+      border-radius: 5px;
+    }
+
+    .user-info {
+      text-align: center;
+      margin-bottom: 20px;
+      
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: cyan;
+      background-image:linear-gradient(45deg,blue,cyan);
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .exercise {
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    .exercise-image {
+      width: 200px;
+      margin-right: 20px;
+    }
+
+    .exercise-content {
+      flex-grow: 1;
+    }
+
+    .exercise h2 {
+      margin-bottom: 10px;
+    }
+
+    .exercise p {
+      margin: 0;
+    }
+
+    .exercise-button {
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body onload="saveExercises()">
+  <a href="../index/index.html"><h1>Home</h1></a>
+  <h1>Exercícios Recomendados</h1>
+
+  <div class="user-info">
+    <h2>Informações do Usuário:</h2>
+    <h1>Fábio Andrade</h1>
+    <img class="imagem-user" src="img/WhatsApp Image 2023-04-11 at 17.36.17.jpeg" alt="">
+    <h2>Peso: 75kg</h2>
+    <h2>Objetivo: Hipertrofia</h2>
+    <h1>SEGUNDA-FEIRA</h1>
+  </div>
+
+  <div class="exercise-container" id="exercisesContainer"></div>
+  <div id="dialogContainer"></div>
+
+  <script>
+    // Exercícios
+    var exercises = [
+      {
+        name: "Supino (3x12)",
+        description: "Exercício de fortalecimento dos músculos do peito, ombros e tríceps. O praticante deita-se em um banco, segura uma barra com as mãos afastadas na largura dos ombros e realiza a extensão dos braços, voltando à posição inicial.",
+        image: "img/supino.jpg"
+      },
+      {
+        name: "Agachamento livre (4x8)",
+        description: "Exercício para fortalecimento dos músculos das pernas, principalmente quadríceps, glúteos e isquiotibiais. O praticante fica em pé, com os pés afastados na largura dos ombros, flexiona os joelhos e desce o quadril em direção ao chão, mantendo a coluna reta.",
+        image: "img/agacha.jpg"
+      },
+      {
+        name: "Rosca direta (3x10-12)",
+        description: "Exercício de fortalecimento dos músculos do bíceps. O praticante segura uma barra com as mãos afastadas na largura dos ombros, mantendo os braços estendidos ao longo do corpo, e realiza a flexão dos cotovelos, levando a barra em direção ao peito.",
+        image: "img/rosca2.jpg"
+      }
+    ];
+
+    // Função para salvar os exercícios atualizados no localStorage
+    function saveExercises() {
+      localStorage.setItem("exercises", JSON.stringify(exercises));
+    }
+
+    // Função para gerar o conteúdo HTML dos exercícios
+    function generateExerciseHTML(exercise, index) {
+      var exerciseHTML = '<div class="exercise">';
+      exerciseHTML += '<img class="exercise-image" src="' + exercise.image + '" alt="' + exercise.name + '">';
+      exerciseHTML += '<div class="exercise-content">';
+      exerciseHTML += '<h2>' + exercise.name + '</h2>';
+      exerciseHTML += '<p>' + exercise.description + '</p>';
+      exerciseHTML += '</div>';
+      exerciseHTML += '<button class="exercise-button" onclick="changeExercise(' + index + ')">Trocar</button>';
+      exerciseHTML += '</div>';
+      return exerciseHTML;
+    }
+
+    // Preenche o container de exercícios com os dados armazenados
+    var exercisesContainer = document.getElementById("exercisesContainer");
+    exercises.forEach(function(exercise, index) {
+      exercisesContainer.innerHTML += generateExerciseHTML(exercise, index);
+    });
+
+    // Opções de exercícios para troca
+    var options = [
+      {
+        name: "Supino com halteres",
+        description: "Variação do exercício de supino utilizando halteres em vez de barra. Ajuda a desenvolver força e estabilidade dos músculos do peito, ombros e tríceps.",
+        image: "img/nova_imagem1.jpg"
+      },
+      {
+        name: "Agachamento guiado",
+        description: "Variação do exercício de agachamento utilizando uma máquina de agachamento guiado. Proporciona suporte e estabilidade durante o movimento, sendo ideal para iniciantes ou pessoas com limitações.",
+        image: "img/nova_imagem2.jpg"
+      },
+      {
+        name: "Rosca direta com halteres",
+        description: "Variação do exercício de rosca direta utilizando halteres em vez de barra. Ajuda a fortalecer os músculos do bíceps e melhora o equilíbrio e a estabilidade dos braços.",
+        image: "img/nova_imagem3.jpg"
+      }
+    ];
+
+    // Função para trocar um exercício
+    function changeExercise(index) {
+      var optionsHTML = '';
+      options.forEach(function(option, optionIndex) {
+        optionsHTML += '<option value="' + optionIndex + '">' + option.name + '</option>';
+      });
+
+      var selectHTML = '<select id="exerciseSelect">' + optionsHTML + '</select>';
+
+      var dialogHTML = '<div class="dialog">';
+      dialogHTML += '<p>Selecione um exercício:</p>';
+      dialogHTML += selectHTML;
+      dialogHTML += '<button onclick="replaceExercise(' + index + ')">Confirmar</button>';
+      dialogHTML += '</div>';
+
+      var dialogContainer = document.getElementById("dialogContainer");
+      dialogContainer.innerHTML = dialogHTML;
+    }
+
+    // Função para substituir um exercício selecionado
+    function replaceExercise(index) {
+      var selectElement = document.getElementById("exerciseSelect");
+      var newExerciseIndex = parseInt(selectElement.value);
+      var selectedOption = options[newExerciseIndex];
+
+      exercises[index].name = selectedOption.name;
+      exercises[index].description = selectedOption.description;
+      exercises[index].image = selectedOption.image;
+
+      var exerciseElement = document.getElementsByClassName("exercise")[index];
+      exerciseElement.getElementsByTagName("h2")[0].textContent = selectedOption.name;
+      exerciseElement.getElementsByTagName("p")[0].textContent = selectedOption.description;
+      exerciseElement.getElementsByTagName("img")[0].src = selectedOption.image;
+
+      saveExercises();
+
+      var dialogContainer = document.getElementById("dialogContainer");
+      dialogContainer.innerHTML = '';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+4
+
+
+SEX0S12;Mazda;Miata;1991;50018.000000;MX-5;Carro fofo;
+
+
+
+PUT4F53;Toyota;Supra;1995;28229.000000;MK-3;JDM foda;
+
+
+
+MAT4R52;Nissan;Skyline;2001;6700000.000000;GTR-R34;Carro do Paul Walker de Velozes e Furiosos leiloado por 6,7m;
+
+
+
+FOD4K57;Toyota;AE86;1983;24846.000000;Sprinter Trueno;Carro do Initial D;
