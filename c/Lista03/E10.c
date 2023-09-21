@@ -1,36 +1,43 @@
 #include <stdio.h>
 
+//função para calcular o máximo divisor comum (MDC) usando o algoritmo de Euclides
+int calcularMDC(int a, int b) {
+    while (b != 0) {
+        int temp = b;
+        b = a % b;
+        a = temp;
+    }//end while
+    return a;
+}//end calcularMDC
+
+//função para calcular o mínimo múltiplo comum (MMC)
+int calcularMMC(int a, int b) {
+    int mdc = calcularMDC(a, b);
+ //MMC = (a * b) / MDC
+    return (a * b) / mdc;
+}//end calcularMMC
+
 int main(void)
 {
 
  // inicialização de variavel
-    int n, primo=0;
+    int num1, num2, mdc;
 
- //definir o numero inteiro
-    puts("digite um numero inteiro:");
-    scanf("%d", &n);
+ //ler dois números inteiros
+    puts("digite 2 numeros inteiros:");
+    scanf("%d %d", &num1, &num2);
 
- //estrutura de repetição
-    for( int i=1; i<=n; i++ )
-    {
-     //testar se o numero é divisivel somente por 1 e ele mesmo
-       if( n % i == 0 )
-       {
-            primo++;
-       }//end if
-    }//end for
-
- //imprimir se é primo ou não
-    if ( primo == 2 )
-    {
-        printf("\n%d eh primo", n);
+ //chamar função mmc
+    mdc = calcularMDC(num1, num2);
+ 
+ //testar se são primos entre si ( MDC = 1 )
+    if (mdc == 1) {
+        printf("%d e %d sao primos entre si.\n", num1, num2);
     }//end if
-    else
+    else 
     {
-        printf("\n%d nao eh primo", n);
-    }
-    
-    
+        printf("%d e %d nao sao primos entre si. MDC = %d\n", num1, num2, mdc);
+    }//end else
 
     return 0;
 }
