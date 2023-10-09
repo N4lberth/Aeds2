@@ -5,7 +5,7 @@ int main(void)
     int v[10], n, total=0;
 
     for(int i=0; i<10; i++){
-        printf("digite o %d numero ", i);
+        printf("digite o %d numero ", i+1);
         scanf("%d", &v[i]);
     }
 

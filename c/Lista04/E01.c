@@ -10,7 +10,7 @@ int main(void)
     n=V[0];
 
     for(int i=1; i<10; i++){
-        printf("digite o %d numero ", i);
+        printf("digite o %d numero ", i+1);
         scanf("%d", &V[i]);
 
         if(n<V[i])
