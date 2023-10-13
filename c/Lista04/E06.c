@@ -25,8 +25,24 @@ int ehPalindromo(const char *str) {
     return 1; // É um palíndromo
 }//end ehPalindromo
 
+//função para encontrar os palíndromos da frase
+void encontraPalindromos(const char *frase) {
+    int tamanho = strlen(frase);
+    for (int i = 0; i < tamanho; i++) {
+        for (int j = i + 3; j <= tamanho; j++) {
+            char subfrase[1000]; // Tamanho máximo da subfrase 
+            strncpy(subfrase, frase + i, j - i);
+            subfrase[j - i] = '\0';
+
+            if (ehPalindromo(subfrase)) {
+                printf("Palíndromo encontrado: %s\n", subfrase);
+            }//end if
+        }//end for
+    }//end for
+}//end encontraPalindromos
+
 int main() {
-    char frase[1000]; // Tamanho máximo da frase (ajuste conforme necessário)
+    char frase[1000]; // Tamanho máximo da frase 
 
     printf("Digite uma frase: ");
     fgets(frase, sizeof(frase), stdin);
@@ -41,6 +57,10 @@ int main() {
     else {
         printf("A frase nao eh um palindromo.\n");
     }//end else
+
+ //cham a função para encontrar os palíndromos no meio da frase e printa na tela
+    printf("Palindromos na frase (mais que 3 caracteres):\n");
+    encontraPalindromos(frase);
 
     return 0;
 }
