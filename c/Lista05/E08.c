@@ -1,21 +1,21 @@
 #include <stdio.h>
 
-void imprimirTriangulo(int n)
+void imprimirTrianguloInverso(int n)
 {
     if(n > 0)
     {
-        imprimirTriangulo(n-1);
         for(int i=0; i < n ;i++){
             printf("*");
         }//end for
         printf("\n");
+        imprimirTrianguloInverso(n-1);
     }//end if
-}//end imprimirTriangulo
+}//end imprimirTrianguloInverso
 
 
 int main(void)
 {
- //teste função imprimirTriangulo
-    imprimirTriangulo(5);
+ //teste função imprimirTrianguloInverso
+    imprimirTrianguloInverso(5);
     return 0;
 }
