@@ -7,8 +7,10 @@ typedef struct data
 }data;//end data
 
 //função diaDeHoje recebe a data de um dia
-data diaDeHoje(data x)
+data diaDeHoje(void)
 {
+    data x;
+
     printf("digite o ano: ");
     scanf("%d", &x.ano);
 
@@ -66,5 +68,77 @@ data diaDeHoje(data x)
 //função adicionarDias recebe um numero de dias e adiciona a data
 data adicionarDias(data x, int n){
 
-
+    for(int i=1; i<=n; i++){
+        switch (x.mes)
+        {
+        case 1:
+        case 3:
+        case 5:
+        case 7:
+        case 8:
+        case 10:
+        case 12:
+            if(x.dia<31){
+                x.dia++;
+            }//end if
+            else{
+                x.dia=1;
+                x.mes++;
+            }//end else
+            break;
+        case 4:
+        case 6:
+        case 9:
+        case 11:
+            if(x.dia<30){
+                x.dia++;
+            }//end if
+            else{
+                x.dia=1;
+                x.mes++;
+            }//end else
+            break;
+        case 2:
+            if(x.dia%400==0 ||(x.dia%4==0 && x.dia%100!=0)){
+                if(x.dia<29){
+                    x.dia++;
+                }//end if
+                else{
+                    x.dia=1;
+                    x.mes++;
+                }//end else
+            }//end if
+            else{
+                if(x.dia<28){
+                    x.dia++;
+                }//end if
+                else{
+                    x.dia=1;
+                    x.mes++;
+                }//end else
+            }//end else
+            break;
+        default:
+            x.mes=1;
+            x.ano++;
+        }//end switch
+    }//end for
+    return x;
 }//end adicionarDias
+
+
+//test da função
+int main(void){
+
+    data D1;
+
+    D1 = diaDeHoje();
+
+    printf("%d/%d/%d\n",D1.dia, D1.mes, D1.ano);
+
+    D1 = adicionarDias(D1, 10);
+
+    printf("%d/%d/%d\n",D1.dia, D1.mes, D1.ano);
+
+    return 0;
+}

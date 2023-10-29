@@ -7,8 +7,10 @@ typedef struct data
 }data;//end data
 
 //função diaDeHoje recebe a data de um dia
-data diaDeHoje(data x)
+data diaDeHoje(void)
 {
+    data x;
+
     printf("digite o ano: ");
     scanf("%d", &x.ano);
 
@@ -69,7 +71,7 @@ int main(void){
 
     data D1;
 
-    D1 = diaDeHoje(D1);
+    D1 = diaDeHoje();
 
     printf("%d/%d/%d",D1.dia, D1.mes, D1.ano);
     return 0;
