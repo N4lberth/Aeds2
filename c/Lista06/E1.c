@@ -4,4 +4,4 @@
 typedef struct data
 {
     int ano, mes, dia;
-};//end data
+}data;//end data
