@@ -205,7 +205,7 @@ class Data
 
 
  // Método amigo para retornar uma stream de saída
-    friend std::ostream& operator<<(std::ostream& os, const Data& data);
+    friend ostream& operator << (ostream& output, Data data);
 
 
  //função diferencaDeDias entrega um numero inteiro q representa a diferença de dias entre duas datas
@@ -231,6 +231,15 @@ class Data
         return total;
     }//end operator '-'
 };
+
+ //função amiga ostream
+    ostream& operator << (ostream& output, Data data){
+        output << data.dia <<"/"<< data.mes <<"/"<< data.ano << endl;
+        return output;
+    }//end ostream
+
+
+
 int main(void){
 
     Data test1;
@@ -240,15 +249,15 @@ int main(void){
     int dias;
     int dias2;
 
-    cout << test1.getDia()<<"/"<<test1.getMes()<<"/"<<test1.getAno() << endl;
-    cout << test2.getDia()<<"/"<<test2.getMes()<<"/"<<test2.getAno() << endl;
+    cout << test1;
+    cout << test2;
 
     test1 = test2 + 4; 
     
     dias2 = test2 - test3;
     dias=test2.diferencaDeDias(test2, test3);
 
-    cout << test1.getDia()<<"/"<<test1.getMes()<<"/"<<test1.getAno() << endl;
+    cout << test1;
     cout << dias<< endl;
     cout << dias2<< endl;
 
