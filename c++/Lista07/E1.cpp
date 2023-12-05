@@ -1,0 +1,222 @@
+#include <iostream>
+
+using namespace std;
+
+class Data
+{
+ private:
+    int dia, mes, ano;
+
+ public:
+  // construtor padrão
+    Data()
+    {
+
+        dia = 1;
+        mes = 1;
+        ano = 1;
+    } // end Data
+
+  // construtor  com parametro
+    Data(int newano, int newmes, int newdia)
+    {
+        if (newano > 0)
+        {
+            ano = newano;
+        } // end if
+        else
+        {
+            cout << "Ano inválido. Configurando para 1." << endl;
+            ano = 1;
+        } // end else
+
+        if (newmes >= 1 && newmes <= 12)
+        {
+            mes = newmes;
+        } // end if
+        else
+        {
+            cout << "Mês inválido. Configurando para 1." << endl;
+            mes = 1;
+        } // end else
+
+        if (newdia > 0)
+        {
+            if (newmes == 1 || newmes == 3 || newmes == 5 || newmes == 7 || newmes == 8 || newmes == 10 || newmes == 12)
+            {
+                if (newdia >= 1 && newdia <= 31)
+                {
+                    dia = newdia;
+                } // end if
+                else
+                {
+                    cout << "Dia inválido para o mês especificado. Configurando para 1." << endl;
+                    dia = 1;
+                } // end else
+            }// end if
+            else if (newmes == 4 || newmes == 6 || newmes == 9 || newmes == 11)
+            {
+                if (newdia >= 1 && newdia <= 30)
+                {
+                    dia = newdia;
+                } // end if
+                else
+                {
+                    cout << "Dia inválido para o mês especificado. Configurando para 1." << endl;
+                    dia = 1;
+                } // end else
+            }// end else if
+            else if (newmes == 2)
+            {
+                if ((newano % 400 == 0) || (newano % 4 == 0 && newano % 100 != 0))
+                {
+                    if (newdia >= 1 && newdia <= 29)
+                    {
+                        dia = newdia;
+                    } // end if
+                    else
+                    {
+                        cout << "Dia inválido para o mês especificado. Configurando para 1." << endl;
+                        dia = 1;
+                    } // end else
+                }// end if
+                else
+                {
+                    if (newdia >= 1 && newdia <= 28)
+                    {
+                        dia = newdia;
+                    } // end if
+                    else
+                    {
+                        cout << "Dia inválido para o mês especificado. Configurando para 1." << endl;
+                        dia = 1;
+                    } // end else
+                }// end else
+            } // end else if
+            else
+            {
+                cout << "Mês inválido. Configurando para 1." << endl;
+                mes = 1;
+            } // end else
+        }// end if
+        else
+        {
+            cout << "Dia inválido. Configurando para 1." << endl;
+            dia = 1;
+        } // end else
+    }// end Data
+
+ // funções que retornam os valores das varieveis privadas
+    int getDia(void)
+    {
+        return dia;
+    } // end getDia
+
+    int getMes(void)
+    {
+        return mes;
+    } // end getMes
+
+    int getAno(void)
+    {
+        return ano;
+    } // end getAno
+
+ // função que adiciona dias a data
+    void adicionarDia(int nDias)
+    {
+
+        for (int i = 1; i <= nDias; i++)
+        {
+            switch (mes)
+            {
+            case 1:
+            case 3:
+            case 5:
+            case 7:
+            case 8:
+            case 10:
+            case 12:
+                if (dia < 31)
+                {
+                    dia++;
+                } // end if
+                else
+                {
+                    dia = 1;
+                    mes++;
+                } // end else
+                break;
+            case 4:
+            case 6:
+            case 9:
+            case 11:
+                if (dia < 30)
+                {
+                    dia++;
+                } // end if
+                else
+                {
+                    dia = 1;
+                    mes++;
+                } // end else
+                break;
+            case 2:
+                if (dia % 400 == 0 || (dia % 4 == 0 && dia % 100 != 0))
+                {
+                    if (dia < 29)
+                    {
+                        dia++;
+                    } // end if
+                    else
+                    {
+                        dia = 1;
+                        mes++;
+                    } // end else
+                }// end if
+                else
+                {
+                    if (dia < 28)
+                    {
+                        dia++;
+                    } // end if
+                    else
+                    {
+                        dia = 1;
+                        mes++;
+                    } // end else
+                }// end else
+                break;
+            default:
+                mes = 1;
+                ano++;
+            } // end switch
+        }// end for
+    }// end adicionarDia
+
+ //sobrecarga de operador '+'
+    Data operator + (int nDias){
+        Data resultado = *this;
+        resultado.adicionarDia(nDias);
+        return resultado;
+    }//end operator '+'
+
+    
+};
+
+int main(void){
+
+    Data test1;
+
+    Data test2(2001, 10, 24);
+
+    test2 = test2 + 4; 
+
+    cout << test2.getDia()<<"/"<<test2.getMes()<<"/"<<test2.getAno() << endl;
+
+    cout << test1.getDia()<<"/"<<test1.getMes()<<"/"<<test1.getAno() << endl;
+
+
+
+    return 0;
+}
