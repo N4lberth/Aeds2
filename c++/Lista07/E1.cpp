@@ -18,7 +18,7 @@ class Data
     } // end Data
 
   // construtor  com parametro
-    Data(int newano, int newmes, int newdia)
+    Data(int newdia, int newmes, int newano)
     {
         if (newano > 0)
         {
@@ -208,7 +208,7 @@ int main(void){
 
     Data test1;
 
-    Data test2(2001, 10, 24);
+    Data test2(24, 10, 2004);
 
     test2 = test2 + 4; 
 
