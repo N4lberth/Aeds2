@@ -4,7 +4,7 @@ using namespace std;
 
 class Data
 {
- private:
+ protected:
     int dia, mes, ano;
 
  public:
@@ -230,7 +230,7 @@ class Data
         total=diferencaDeDias(*this, y);
         return total;
     }//end operator '-'
-};
+};//end class Data
 
  //função amiga ostream
     ostream& operator << (ostream& output, Data data){
