@@ -162,7 +162,7 @@ class Horario
     }//end ostream
 
 
-int main (void){
+/*int main (void){
 
     Horario test1(30, 12, 12);
     Horario test2(20, 20, 20);
@@ -175,4 +175,4 @@ int main (void){
     cout << test2;
 
     return 0;
-}
+}*/

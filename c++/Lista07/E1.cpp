@@ -2,6 +2,7 @@
 
 using namespace std;
 
+
 class Data
 {
  protected:
@@ -240,7 +241,7 @@ class Data
 
 
 
-int main(void){
+/*int main(void){
 
     Data test1;
     Data test2(24, 10, 2004);
@@ -262,4 +263,4 @@ int main(void){
     cout << dias2<< endl;
 
     return 0;
-}
+}*/
