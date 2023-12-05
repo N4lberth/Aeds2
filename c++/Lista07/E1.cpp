@@ -11,11 +11,11 @@ class Data
   // construtor padrão
     Data()
     {
-
         dia = 1;
         mes = 1;
         ano = 1;
     } // end Data
+
 
   // construtor  com parametro
     Data(int newdia, int newmes, int newano)
@@ -39,7 +39,6 @@ class Data
             cout << "Mês inválido. Configurando para 1." << endl;
             mes = 1;
         } // end else
-
         if (newdia > 0)
         {
             if (newmes == 1 || newmes == 3 || newmes == 5 || newmes == 7 || newmes == 8 || newmes == 10 || newmes == 12)
@@ -106,6 +105,7 @@ class Data
         } // end else
     }// end Data
 
+
  // funções que retornam os valores das varieveis privadas
     int getDia(void)
     {
@@ -121,6 +121,7 @@ class Data
     {
         return ano;
     } // end getAno
+
 
  // função que adiciona dias a data
     void adicionarDia(int nDias)
@@ -194,6 +195,7 @@ class Data
         }// end for
     }// end adicionarDia
 
+
  //sobrecarga de operador '+'
     Data operator + (int nDias){
         Data resultado = *this;
@@ -201,22 +203,54 @@ class Data
         return resultado;
     }//end operator '+'
 
-    
-};
 
+ // Método amigo para retornar uma stream de saída
+    friend std::ostream& operator<<(std::ostream& os, const Data& data);
+
+
+ //função diferencaDeDias entrega um numero inteiro q representa a diferença de dias entre duas datas
+    int diferencaDeDias(Data x, Data y){
+        Data tempx = x;
+        Data tempy = y;
+
+        int quntdias=0;
+
+        while (tempx.dia != tempy.dia || tempx.mes != tempy.mes || tempx.ano != tempy.ano) 
+        {
+           tempy.adicionarDia(1);
+           quntdias++;
+        }//end while
+        return quntdias;
+    }//end diferencaDeDias
+
+
+ //sobrecarga de operador '-'
+    int operator - (Data y){
+        int total=0;
+        total=diferencaDeDias(*this, y);
+        return total;
+    }//end operator '-'
+};
 int main(void){
 
     Data test1;
-
     Data test2(24, 10, 2004);
+    Data test3(10, 10, 2004);
 
-    test2 = test2 + 4; 
-
-    cout << test2.getDia()<<"/"<<test2.getMes()<<"/"<<test2.getAno() << endl;
+    int dias;
+    int dias2;
 
     cout << test1.getDia()<<"/"<<test1.getMes()<<"/"<<test1.getAno() << endl;
+    cout << test2.getDia()<<"/"<<test2.getMes()<<"/"<<test2.getAno() << endl;
 
+    test1 = test2 + 4; 
+    
+    dias2 = test2 - test3;
+    dias=test2.diferencaDeDias(test2, test3);
 
+    cout << test1.getDia()<<"/"<<test1.getMes()<<"/"<<test1.getAno() << endl;
+    cout << dias<< endl;
+    cout << dias2<< endl;
 
     return 0;
 }
