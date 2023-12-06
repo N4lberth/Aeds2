@@ -13,7 +13,7 @@ class Conta
     string PIX;
 
     Conta(int numero);
-    float saldo();
+    //float saldo();
 
     void sacar(float valor);
     void depositar(float valor);   
@@ -54,7 +54,7 @@ class Pessoa
  protected:
     string nome;
  public:
-    Conta contas[];
+    //Conta contas[];
 
     Pessoa (string, string CPF);
 
