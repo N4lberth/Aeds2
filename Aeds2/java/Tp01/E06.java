@@ -29,7 +29,7 @@ public class E06 {
     }
 
     public static boolean numeroReal(String texto){
-        if(texto.matches("^[-+]?[0-9]*([.,][0-9]+)?$") && !texto.matches("\\d+")){
+        if(texto.matches("^[-+]?[0-9]*([.,][0-9]*+)?$") && !texto.matches("\\d+")){
             return true;
         } else {
             return false;
@@ -43,19 +43,19 @@ public class E06 {
         while (!(texto=MyIO.readLine()).equals("FIM")) {
             
             if(somenteVogal(texto)){
-                MyIO.println("SIM");
+                MyIO.print("SIM ");
             } else {
-                MyIO.println("NAO");
+                MyIO.print("NAO ");
             }
             if(somenteConsoante(texto)){
-                MyIO.println("SIM");
+                MyIO.print("SIM ");
             } else {
-                MyIO.println("NAO");
+                MyIO.print("NAO ");
             }
             if(numeroInteiro(texto)){
-                MyIO.println("SIM");
+                MyIO.print("SIM ");
             } else {
-                MyIO.println("NAO");
+                MyIO.print("NAO ");
             }
             if(numeroReal(texto)){
                 MyIO.println("SIM");
