@@ -1,4 +1,4 @@
-public class E05 {
+public class E14 {
 
     public static boolean and(String aux) { 
         boolean resultado = true;
