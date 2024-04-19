@@ -357,18 +357,44 @@ public class Q07 {
 
     public static Personagem[] ordenarcaoInsercao(Personagem[] registro){
 
+        int comparacoes = 0;
+        int movimentacoes = 0;
+        long startTime = System.nanoTime();
+
         for (int i = 1; i < registro.length; i++){
 			Personagem tmp = registro[i];
             int j = i - 1;
 
             while ((j >= 0) && (compararData(registro[j], tmp))){
+                comparacoes++;
+                movimentacoes++;
+                
                 registro[j + 1] = registro[j];
                 j--;
             }
             registro[j + 1] = tmp;
+            movimentacoes++;
         }
+
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime) / 1000000; // Tempo em milissegundos
+
+        // Escrever informações no arquivo de log
+        escreverLog(comparacoes, movimentacoes, duration);
+
         return registro;
 	}
+
+    public static void escreverLog(int comparacoes, int movimentacoes, long tempoExecucao) {
+        String matricula = "811197"; 
+        String nomeArquivo = "matrícula_insercao.txt";
+
+        try (PrintWriter writer = new PrintWriter(new FileWriter(nomeArquivo))) {
+            writer.println(matricula + "\t" + comparacoes + "\t" + movimentacoes + "\t" + tempoExecucao);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static boolean compararData(Personagem data1, Personagem data2){
         
@@ -415,5 +441,3 @@ public class Q07 {
         }
     }
 }
-
-
