@@ -318,7 +318,7 @@ class Personagem{
     }
     
 }
-public class Q01 {
+public class Q05 {
 
     public static boolean checkEnd(String entrada){
         boolean check = true;
@@ -355,6 +355,23 @@ public class Q01 {
         return newArray;
     }
 
+    public static Personagem[] ordenacaoSelecao(Personagem[] registro){
+        for (int i = 0; i < registro.length - 1; i++) {
+			int menor = i;
+			for (int j = (i + 1); j < registro.length; j++){
+                int resultado = registro[menor].getName().compareTo(registro[j].getName());
+				if (resultado > 0){
+					menor = j;
+				}
+			}
+			// Realiza a troca de elementos
+            Personagem temp = registro[i];
+            registro[i] = registro[menor];
+            registro[menor] = temp;
+		}
+        return registro;
+    }
+
     public static void main(String[] args){
         Scanner sc = new Scanner(System.in);
         Personagem[] registros = new Personagem[0];
@@ -366,10 +383,32 @@ public class Q01 {
             registros = aumentarArray(registros,teste);
             n++;
             id = sc.nextLine();
-            teste.imprimir();
         }
         sc.close();
-    }
+       
+        // Realiza a ordenação e registra informações de desempenho
+        long startTime = System.nanoTime();
 
+        registros = ordenacaoSelecao(registros);
+        
+        long endTime = System.nanoTime();
+        long executionTime = endTime - startTime;
+
+        int x = 0;
+        while ( x < registros.length) {
+            registros[x].imprimir();
+            x++;
+        }
+        int comparacoes = (registros.length*(registros.length-1))/2;
+        int movimentacoes = registros.length - 1;
+        // Escreve as informações no arquivo de log
+        try {
+            FileWriter writer = new FileWriter("matricula_selecao.txt");
+            writer.write("811197\t" + comparacoes + "\t" + movimentacoes + "\t" + executionTime);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     
 }
