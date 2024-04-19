@@ -318,7 +318,7 @@ class Personagem{
     }
     
 }
-public class Q05 {
+public class Q07 {
 
     public static boolean checkEnd(String entrada){
         boolean check = true;
@@ -355,21 +355,39 @@ public class Q05 {
         return newArray;
     }
 
-    public static Personagem[] ordenacaoSelecao(Personagem[] registro){
-        for (int i = 0; i < registro.length - 1; i++) {
-			int menor = i;
-			for (int j = (i + 1); j < registro.length; j++){
-                int resultado = registro[menor].getName().compareTo(registro[j].getName());
-				if (resultado > 0){
-					menor = j;
-				}
-			}
-			// Realiza a troca de elementos
-            Personagem temp = registro[i];
-            registro[i] = registro[menor];
-            registro[menor] = temp;
-		}
+    public static Personagem[] ordenarcaoInsercao(Personagem[] registro){
+
+        for (int i = 1; i < registro.length; i++){
+			Personagem tmp = registro[i];
+            int j = i - 1;
+
+            while ((j >= 0) && (compararData(registro[j], tmp))){
+                registro[j + 1] = registro[j];
+                j--;
+            }
+            registro[j + 1] = tmp;
+        }
         return registro;
+	}
+
+    public static boolean compararData(Personagem data1, Personagem data2){
+        
+        if(data1.getDate().compareTo(data2.getDate()) > 0){
+            return true;
+        }
+        if(data1.getDate().compareTo(data2.getDate()) == 0){
+            //se as datas forem iguais compara os nomes
+            if(data1.getName().compareTo(data2.getName()) > 0 ){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
+        
     }
 
     public static void main(String[] args){
@@ -385,15 +403,9 @@ public class Q05 {
             id = sc.nextLine();
         }
         sc.close();
-       
-        // Realiza a ordenação e registra informações de desempenho
-        long startTime = System.nanoTime();
 
         //ordenar arrey
-        registros = ordenacaoSelecao(registros);
-        
-        long endTime = System.nanoTime();
-        long executionTime = endTime - startTime;
+        registros = ordenarcaoInsercao(registros);
 
         //imprimir registros
         int x = 0;
@@ -401,16 +413,7 @@ public class Q05 {
             registros[x].imprimir();
             x++;
         }
-        int comparacoes = (registros.length*(registros.length-1))/2;
-        int movimentacoes = registros.length - 1;
-        // Escreve as informações no arquivo de log
-        try {
-            FileWriter writer = new FileWriter("matricula_selecao.txt");
-            writer.write("811197\t" + comparacoes + "\t" + movimentacoes + "\t" + executionTime);
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
-    
 }
+
+
