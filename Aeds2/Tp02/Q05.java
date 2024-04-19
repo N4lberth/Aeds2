@@ -355,22 +355,51 @@ public class Q05 {
         return newArray;
     }
 
-    public static Personagem[] ordenacaoSelecao(Personagem[] registro){
+    public static Personagem[] ordenacaoSelecao(Personagem[] registro) {
+        int comparacoes = 0; // Contador para o número de comparações realizadas
+        int movimentacoes = 0; // Contador para o número de movimentações (trocas) realizadas
+    
+        // Início da medição do tempo
+        long startTime = System.nanoTime();
+    
         for (int i = 0; i < registro.length - 1; i++) {
-			int menor = i;
-			for (int j = (i + 1); j < registro.length; j++){
+            int menor = i;
+            for (int j = (i + 1); j < registro.length; j++) {
+                comparacoes++; // Incrementa o contador de comparações
                 int resultado = registro[menor].getName().compareTo(registro[j].getName());
-				if (resultado > 0){
-					menor = j;
-				}
-			}
-			// Realiza a troca de elementos
+                if (resultado > 0) {
+                    menor = j;
+                }
+            }
+            // Realiza a troca de elementos
             Personagem temp = registro[i];
             registro[i] = registro[menor];
             registro[menor] = temp;
-		}
+            movimentacoes ++; // Incrementa o contador de movimentações para a operação de troca
+        }
+    
+        // Fim da medição do tempo
+        long endTime = System.nanoTime();
+        long tempoExecucao = endTime - startTime; // Calcula o tempo decorrido
+    
+        // Escrever informações no arquivo de log
+        escreverLog(comparacoes, movimentacoes, tempoExecucao);
+    
         return registro;
     }
+    
+
+    public static void escreverLog(int comparacoes, int movimentacoes, long tempoExecucao) {
+        String matricula = "811197"; 
+        String nomeArquivo = "matrícula_selecao.txt";
+
+        try (PrintWriter writer = new PrintWriter(new FileWriter(nomeArquivo))) {
+            writer.println(matricula + "\t" + comparacoes + "\t" + movimentacoes + "\t" + tempoExecucao);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public static void main(String[] args){
         Scanner sc = new Scanner(System.in);
@@ -401,16 +430,8 @@ public class Q05 {
             registros[x].imprimir();
             x++;
         }
-        int comparacoes = (registros.length*(registros.length-1))/2;
-        int movimentacoes = registros.length - 1;
-        // Escreve as informações no arquivo de log
-        try {
-            FileWriter writer = new FileWriter("matricula_selecao.txt");
-            writer.write("811197\t" + comparacoes + "\t" + movimentacoes + "\t" + executionTime);
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+  
+    
     }
     
 }

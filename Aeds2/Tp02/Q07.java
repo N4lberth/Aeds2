@@ -356,9 +356,10 @@ public class Q07 {
     }
 
     public static Personagem[] ordenarcaoInsercao(Personagem[] registro){
-
-        int comparacoes = 0;
-        int movimentacoes = 0;
+        int comparacoes = 0; // Contador para o número de comparações realizadas
+        int movimentacoes = 0; // Contador para o número de movimentações (trocas) realizadas
+        
+        // Início da medição do tempo
         long startTime = System.nanoTime();
 
         for (int i = 1; i < registro.length; i++){
@@ -366,16 +367,17 @@ public class Q07 {
             int j = i - 1;
 
             while ((j >= 0) && (compararData(registro[j], tmp))){
-                comparacoes++;
-                movimentacoes++;
+                comparacoes++; //Incrementa o contador de comparações
+                movimentacoes++;  //Incrementa o contador de movimentações para a operação de troca
                 
                 registro[j + 1] = registro[j];
                 j--;
             }
             registro[j + 1] = tmp;
-            movimentacoes++;
+            movimentacoes++;  //Incrementa o contador de movimentações para a operação de troca
         }
 
+        // Fim da medição do tempo
         long endTime = System.nanoTime();
         long duration = (endTime - startTime) / 1000000; // Tempo em milissegundos
 
