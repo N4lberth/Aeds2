@@ -341,7 +341,7 @@ int main(){
     //alocando local de memoria para o personagem
     setlocale(LC_CTYPE, "UTF-8"); 
 
-    Personagem* personagem = (Personagem*) malloc ( 1 * sizeof(Personagem) );
+    Personagem* personagem = (Personagem*) malloc (sizeof(Personagem));
     char* path = "/tmp/characters.csv"; 
     char id[81];
 
@@ -351,15 +351,62 @@ int main(){
     //limpar buffer
     getchar( );
 
+    int n = 0;
+
     while( strcmp( id,"FIM" ) != 0 ){
-        personagem = ler( personagem, path, id );
-        imprimir( personagem );
+        //variavel temporaria para guardar o valor de perssonagem
+        Personagem* tmp = (Personagem*) malloc (sizeof(Personagem));
+        
+        //Realocar espaço para o próximo personagem
+        personagem = realloc(personagem, (n + 1) * sizeof(Personagem));
+
+        // Ler o personagem e aumentar o contador
+        tmp = ler( personagem, path, id );
+        personagem[n] = *tmp;
+        n++;
+
+        //liberar memoria tmp
+        free(tmp);
+
+        //Ler o próximo id e limpar o buffer
         scanf( "%s", id ); 
         getchar( );
     } 
     
-    //liberar memoria alocada
-    free( personagem );
+    //variavel para guardar o nome
+    char nome[100];
+
+    //ler o nome e limpar o buffer
+    fgets(nome, sizeof(nome), stdin);
+    getchar( );
+    while ( strcmp( nome,"FIM" ) != 0 )
+    {
+        /*
+        
+            FAZER PESQUISA BINARIA AQUI
+        
+        */
+    }
+    
+    
+    // Liberar memória alocada para cada personagem
+    for (int i = 0; i < n; i++) {
+        free(personagem[i].id);
+        free(personagem[i].name);
+        free(personagem[i].alternateNames);
+        free(personagem[i].house);
+        free(personagem[i].ancestry);
+        free(personagem[i].species);
+        free(personagem[i].patronus);
+        free(personagem[i].actorName);
+        free(personagem[i].alternateActors);
+        free(personagem[i].dateOfBirth);
+        free(personagem[i].eyeColour);
+        free(personagem[i].gender);
+        free(personagem[i].hairColour);
+    }
+
+    // Liberar memória alocada para o array de personagens
+    free(personagem);
     personagem = NULL;
-    return 0;
 }
