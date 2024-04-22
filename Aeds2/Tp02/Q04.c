@@ -386,6 +386,10 @@ int main(){
             FAZER PESQUISA BINARIA AQUI
         
         */
+       
+       //ler o nome e limpar o buffer
+        fgets(nome, sizeof(nome), stdin);
+        getchar( );
     }
     
     
