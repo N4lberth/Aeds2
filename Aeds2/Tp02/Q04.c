@@ -335,7 +335,37 @@ Personagem* ler(Personagem* personagem, char* filename, char* id_procurado) {
     }
 }
 
+void ordenacaoSelecao(Personagem *personagem, int tamanho){
+    int n = tamanho;
+    for (int i = 0; i < (n - 1); i++) {
+      int menor = i;
+      for (int j = (i + 1); j < n; j++){
+         if (strcmp(personagem[menor].name,personagem[j].name) > 0 ){
+            menor = j;
+         }
+      }
+      Personagem temp = personagem[i];
+      personagem[i] = personagem[menor];
+      personagem[menor] = temp;
+   }
+}
 
+void liberarMemoriaPersonagem(Personagem *p) {
+    // Libera memória para todos os campos de string dentro da estrutura Personagem
+    free(p->id);
+    free(p->name);
+    free(p->alternateNames);
+    free(p->house);
+    free(p->ancestry);
+    free(p->species);
+    free(p->patronus);
+    free(p->actorName);
+    free(p->alternateActors);
+    free(p->dateOfBirth);
+    free(p->eyeColour);
+    free(p->gender);
+    free(p->hairColour);
+}
 
 int main(){
     //alocando local de memoria para o personagem
@@ -353,9 +383,10 @@ int main(){
 
     int n = 0;
 
+    //variavel temporaria para guardar o valor de perssonagem
+    Personagem* tmp = (Personagem*) malloc (sizeof(Personagem));
+
     while( strcmp( id,"FIM" ) != 0 ){
-        //variavel temporaria para guardar o valor de perssonagem
-        Personagem* tmp = (Personagem*) malloc (sizeof(Personagem));
         
         //Realocar espaço para o próximo personagem
         personagem = realloc(personagem, (n + 1) * sizeof(Personagem));
@@ -365,14 +396,17 @@ int main(){
         personagem[n] = *tmp;
         n++;
 
-        //liberar memoria tmp
-        free(tmp);
-
         //Ler o próximo id e limpar o buffer
         scanf( "%s", id ); 
         getchar( );
     } 
-    
+
+    //liberar memoria tmp
+    free(tmp);
+
+    //ordena o vetor personagem[n]
+    ordenacaoSelecao(personagem, n);
+
     //variavel para guardar o nome
     char nome[100];
 
@@ -381,36 +415,40 @@ int main(){
     getchar( );
     while ( strcmp( nome,"FIM" ) != 0 )
     {
-        /*
-        
-            FAZER PESQUISA BINARIA AQUI
-        
-        */
+        //pesquisa binaria
+        int inicio = 0, fim = n - 1;
+
+        while(inicio <= fim){
+            int meio = (inicio + fim) / 2;
+
+            int found = strcmp(nome, personagem[meio].name);
+
+            if(found == 0){
+                printf("\nSIM");
+                break;
+            } 
+            else if(found < 0){
+                fim = meio - 1;
+            }
+            else{
+                inicio = meio - 1;
+            }
+        }
+
+        printf("\nNAO");
        
        //ler o nome e limpar o buffer
         fgets(nome, sizeof(nome), stdin);
         getchar( );
     }
     
-    
     // Liberar memória alocada para cada personagem
     for (int i = 0; i < n; i++) {
-        free(personagem[i].id);
-        free(personagem[i].name);
-        free(personagem[i].alternateNames);
-        free(personagem[i].house);
-        free(personagem[i].ancestry);
-        free(personagem[i].species);
-        free(personagem[i].patronus);
-        free(personagem[i].actorName);
-        free(personagem[i].alternateActors);
-        free(personagem[i].dateOfBirth);
-        free(personagem[i].eyeColour);
-        free(personagem[i].gender);
-        free(personagem[i].hairColour);
+        liberarMemoriaPersonagem(&personagem[i]);
     }
 
-    // Liberar memória alocada para o array de personagens
     free(personagem);
     personagem = NULL;
+
+    return 0;
 }

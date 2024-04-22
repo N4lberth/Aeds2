@@ -387,6 +387,7 @@ public class Q03 {
             if(!found){
                 System.out.println("NAO");
             }
+            
             nome = sc.nextLine();
         }  
 
