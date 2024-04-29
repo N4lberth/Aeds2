@@ -210,7 +210,7 @@ class Personagem{
         try{
             File dados = new File(path);
             Scanner sc = new Scanner(dados);
-
+    
             if(sc.hasNextLine()){
                 sc.nextLine();
             }
@@ -227,11 +227,9 @@ class Personagem{
                 }
                 int ind = p;
                 int end = j;
-
-
-
+    
                 String[] colunas = linha.split(";");
-
+    
                 if(colunas.length>0 && colunas[0].equals(id)){
                     this.setId(colunas[0]);
                     this.setName(colunas[1]);
@@ -239,10 +237,11 @@ class Personagem{
                     this.setAncestry(colunas[4]);
                     this.setSpecies(colunas[5]);
                     this.setPatronus(colunas[6]);
-                    this.setHogwartsStaff(Boolean.parseBoolean(colunas[7]));
-                    this.setHogwartsStudent(Boolean.parseBoolean(colunas[8]));
+                    // Convertendo para minúsculas antes de comparar
+                    this.setHogwartsStaff(colunas[7].toLowerCase().equals("verdadeiro"));
+                    this.setHogwartsStudent(colunas[8].toLowerCase().equals("verdadeiro"));
                     this.setActorName(colunas[9]);
-                    this.setAlive(Boolean.parseBoolean(colunas[10]));
+                    this.setAlive(colunas[10].toLowerCase().equals("verdadeiro"));
                     SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy");
                     try {
                         this.setDate(formato.parse(colunas[12]));
@@ -253,11 +252,12 @@ class Personagem{
                     this.setEyeColor(colunas[14]);
                     this.setGender(colunas[15]);
                     this.setHairColor(colunas[16]);
-                    this.setWizard(Boolean.parseBoolean(colunas[17]));
-
+                    // Convertendo para minúsculas antes de comparar
+                    this.setWizard(colunas[17].toLowerCase().equals("verdadeiro"));
+    
                     String nomesAlternativos = colunas[2];
                     String nomes[] = nomesAlternativos.split(",");
-
+    
                     for(int n = 0; n< nomes.length; n++){
                         if(nomes[n].length() > 0){
                             if(nomes[n].charAt(0) == ' '){
@@ -306,10 +306,11 @@ class Personagem{
                 }
             }
             sc.close();
-        }catch(FileNotFoundException erro){
+        } catch(FileNotFoundException erro){
             erro.printStackTrace();
         }
     }
+    
 
 
     //Função addName

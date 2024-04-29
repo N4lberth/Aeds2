@@ -319,7 +319,11 @@ class Personagem{
     }
     
 }
-public class Q03 {
+public class Q09 {
+
+    // Variáveis globais para registrar as movimentações e comparações
+    static int movimentacoes = 0;
+    static int comparacoes = 0;
 
     public static boolean checkEnd(String entrada){
         boolean check = true;
@@ -356,11 +360,110 @@ public class Q03 {
         return newArray;
     }
 
-    public static void main(String[] args){
-        // Início da medição de tempo
-        long startTime = System.nanoTime();
+    public static Personagem[] sort(Personagem[] array, int n) {
+        //Alterar o vetor ignorando a posicao zero
+        Personagem[] tmp = new Personagem[n+1];
+        for(int i = 0; i < n; i++){
+            tmp[i+1] = array[i];
+        }
+        array = tmp;
 
-        //leitura do id
+        //Contrucao do heap
+        for(int tamHeap = 2; tamHeap <= n; tamHeap++){
+            array = construir(tamHeap, array);
+        }
+
+        //Ordenacao propriamente dita
+        int tamHeap = n;
+        while(tamHeap > 1){
+            // Realiza a troca de elementos
+            Personagem temp = array[1];
+            array[1] = array[tamHeap];
+            array[tamHeap--] = temp;
+            array = reconstruir(tamHeap, array);
+        }
+
+        //Alterar o vetor para voltar a posicao zero
+        tmp = array;
+        array = new Personagem[n];
+        for(int i = 0; i < n; i++){
+            array[i] = tmp[i+1];
+        }
+        
+        return array;
+    }
+
+    public static Personagem[] construir(int tamHeap, Personagem[] array){
+        for(int i = tamHeap; i > 1; i /= 2){   
+            comparacoes++;
+            if (array[i].getHairColor().compareTo(array[i/2].getHairColor()) > 0 || 
+               (array[i].getHairColor().equals(array[i/2].getHairColor()) && 
+                array[i].getName().compareTo(array[i/2].getName()) > 0)) {
+                // Realiza a troca de elementos
+                Personagem temp = array[i];
+                array[i] = array[i/2];
+                array[i/2] = temp;
+                movimentacoes++;
+            } else {
+                break; // Para a iteração se a cor do cabelo for menor ou se os nomes forem menores ou iguais
+            }
+        }
+    
+        return array;
+    }
+    
+
+    public static Personagem[] reconstruir(int tamHeap, Personagem[] array){
+        int i = 1;
+        while(i <= (tamHeap/2)){
+            int filho = getMaiorFilho(i, tamHeap, array);
+            comparacoes += 2;
+            if(array[i].getHairColor().compareTo(array[filho].getHairColor()) < 0 ||
+               (array[i].getHairColor().equals(array[filho].getHairColor()) && 
+                array[i].getName().compareTo(array[filho].getName()) < 0)){
+                // Realiza a troca de elementos
+                Personagem temp = array[i];
+                array[i] = array[filho];
+                array[filho] = temp;
+    
+                i = filho;
+                movimentacoes++;
+            }else{
+                i = tamHeap;
+            }
+        }
+        return array;
+    }
+    
+
+    public static int getMaiorFilho(int i, int tamHeap, Personagem[] array){
+        int filho;
+        if (2*i == tamHeap || array[2*i].getHairColor().compareTo(array[2*i+1].getHairColor()) > 0){
+            filho = 2*i;
+        }else if(array[2*i].getHairColor().compareTo(array[2*i+1].getHairColor()) == 0){
+            if (array[2*i].getName().compareTo(array[2*i+1].getName()) > 0) {
+                filho = 2*i;
+            } else {
+                filho = 2*i + 1;
+            }
+        }else {
+            filho = 2*i + 1;
+        }
+        return filho;
+    }
+
+    public static void escreverLog(int comparacoes, int movimentacoes, long tempoExecucao) {
+        String matricula = "811197"; 
+        String nomeArquivo = "matrícula_heapsort.txt";
+
+        try (PrintWriter writer = new PrintWriter(new FileWriter(nomeArquivo))) {
+            writer.println(matricula + "\t" + comparacoes + "\t" + movimentacoes + "\t" + tempoExecucao);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args){
         Scanner sc = new Scanner(System.in);
         Personagem[] registros = new Personagem[0];
         int n = 0;
@@ -372,41 +475,28 @@ public class Q03 {
             n++;
             id = sc.nextLine();
         }
-
-        // Pesquisa sequencial
-        String nome = sc.nextLine();
-        int comparacoes = 0;
-        while(checkEnd(nome)){
-            boolean found = false;
-            for(int i = 0; i< registros.length; i++){
-                comparacoes++; // Contagem das comparações
-                if(igual(registros[i].getName(),nome)){
-                    System.out.println("SIM");
-                    found = true;
-                }
-            }
-            if(!found){
-                System.out.println("NAO");
-            }
-            
-            nome = sc.nextLine();
-        }  
-
-        // Fim da medição de tempo
-        long endTime = System.nanoTime();
-        long duration = (endTime - startTime) / 1000000; // Tempo em milissegundos
-
-        // Criando e escrevendo no arquivo de log
-        String fileName = "matrícula_sequencial.txt";
-        try {
-            FileWriter fw = new FileWriter(fileName);
-            BufferedWriter bw = new BufferedWriter(fw);
-            bw.write("811197\t" + duration + "\t" + comparacoes);
-            bw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         sc.close();
+
+        // Marcar o tempo de início
+        long inicio = System.nanoTime();
+
+        //ordenar arrey
+        registros = sort(registros, n);
+
+        // Marcar o tempo de fim
+        long fim = System.nanoTime();
+
+        // Calcular o tempo de execução
+        long tempoExecucao = (fim - inicio) / 1000000; // Tempo em milissegundos
+
+        // Escrever o log com as informações
+        escreverLog(comparacoes, movimentacoes, tempoExecucao);
+
+        //imprimir registros
+        int x = 0;
+        while ( x < registros.length) {
+            registros[x].imprimir();
+            x++;
+        }
     }
 }
