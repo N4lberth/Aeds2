@@ -441,7 +441,7 @@ int main(){
         fgets(nome, sizeof(nome), stdin);
         getchar( );
     }
-    
+
     // Liberar memória alocada para cada personagem
     for (int i = 0; i < n; i++) {
         liberarMemoriaPersonagem(&personagem[i]);
