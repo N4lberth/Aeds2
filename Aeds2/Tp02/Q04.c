@@ -28,35 +28,45 @@ char*   hairColour      ;
 bool    wizard          ; 
 } Personagem;
 
-// construtor
-void newPersonagem ( Personagem* personagem, char* id , char*  name, char* alternateNames, char* house,char* ancestry, char*  species, char* patronus,bool  hogwartsStaff,bool  hogwartsStudent, char* actorName, bool alive, char* alternateActors, char*  dateOfBirth, int yearOfBirth, char*eyeColour, char* gender , char* hairColour, bool wizard ){
-    if(personagem != NULL){
-    personagem->id = id;                             
-    personagem->name = name;                         
-    personagem->alternateNames = alternateNames;                 
-    personagem->house = house;                           
-    personagem->ancestry = ancestry;                     
-    personagem->species = species;      
-    if(strcmp(patronus,"null") == 0){
-        personagem -> patronus = "";
-    }else{
-        personagem->patronus= patronus;     
-    }                           
-    personagem->hogwartsStaff= hogwartsStaff;                   
-    personagem->hogwartsStudent= hogwartsStudent ;     
-    if(strcmp(actorName,"null") == 0){ 
-        personagem -> actorName = "";
-    }else{
-        personagem->actorName= actorName;  
-    }                         
-    personagem->alive= alive  ;                           
-    personagem->alternateActors= alternateActors;               
-    personagem->dateOfBirth  = dateOfBirth  ;                   
-    personagem->yearOfBirth = yearOfBirth ;                   
-    personagem->eyeColour = eyeColour;                       
-    personagem->gender = gender ;                         
-    personagem->hairColour  = hairColour ;                     
-    personagem->wizard  = wizard ;                         
+// Construtor
+void newPersonagem(Personagem *personagem, const char *id, const char *name, const char *alternateNames,
+                   const char *house, const char *ancestry, const char *species, const char *patronus,
+                   bool hogwartsStaff, bool hogwartsStudent, const char *actorName, bool alive,
+                   const char *alternateActors, const char *dateOfBirth, int yearOfBirth,
+                   const char *eyeColour, const char *gender, const char *hairColour, bool wizard) {
+    if (personagem != NULL) {
+        personagem->id = strdup(id);
+        personagem->name = strdup(name);
+        personagem->alternateNames = strdup(alternateNames);
+        personagem->house = strdup(house);
+        personagem->ancestry = strdup(ancestry);
+        personagem->species = strdup(species);
+        
+        // Alocar e copiar a string do patronus
+        if (strcmp(patronus, "null") == 0) {
+            personagem->patronus = strdup("");
+        } else {
+            personagem->patronus = strdup(patronus);
+        }
+        
+        personagem->hogwartsStaff = hogwartsStaff;
+        personagem->hogwartsStudent = hogwartsStudent;
+        
+        // Alocar e copiar a string do nome do ator
+        if (strcmp(actorName, "null") == 0) {
+            personagem->actorName = strdup("");
+        } else {
+            personagem->actorName = strdup(actorName);
+        }
+        
+        personagem->alive = alive;
+        personagem->alternateActors = strdup(alternateActors);
+        personagem->dateOfBirth = strdup(dateOfBirth);
+        personagem->yearOfBirth = yearOfBirth;
+        personagem->eyeColour = strdup(eyeColour);
+        personagem->gender = strdup(gender);
+        personagem->hairColour = strdup(hairColour);
+        personagem->wizard = wizard;
     }
 }
 
@@ -238,140 +248,150 @@ void imprimir ( Personagem* personagem ){
     }
     printf( "[%s ## %s ## %s ## %s ## %s ## %s ## %s ## %s ## %s ## %s ## %s ## %s ## %d ## %s ## %s ## %s ## %s]\n",personagem->id,personagem->name,personagem->alternateNames,personagem->house,personagem->ancestry,personagem->species,personagem->patronus,personagem->hogwartsStaff ? "true" : "false",personagem->hogwartsStudent ? "true" : "false",personagem->actorName,personagem->alive ? "true" : "false",personagem->dateOfBirth,personagem->yearOfBirth,personagem->eyeColour,personagem->gender,personagem->hairColour,personagem->wizard ? "true" : "false" ); 
 }
-bool checardata(char data[]){
-    bool edata = "false";
-    char molde[] = {"00-0-0000"};
-    int count = 0;
-    for(int i = 0; i<strlen(molde);i++){
-        if(data[i] == molde[i]){
-            count++;
+
+// Função para verificar e padronizar a data para o formato "DD-MM-AAAA"
+bool checarData(char *data) {
+    // Verificar se a data tem o formato "DD/MM/AAAA"
+    if (strlen(data) != 10) {
+        return false;
+    }
+    
+    // Verificar se os separadores são válidos
+    if (data[2] != '-' || data[5] != '-') {
+        return false;
+    }
+    
+    // Verificar se os caracteres restantes são dígitos
+    for (int i = 0; i < 10; i++) {
+        if (i != 2 && i != 5 && !isdigit(data[i])) {
+            return false;
         }
     }
-    if(count == 2){
-        edata = "true";
+    
+    // Se a data estiver no formato correto, não há necessidade de padronização
+    if (data[2] == '-' && data[5] == '-') {
+        return true;
     }
-    return edata;
+    
+    // Padronizar a data para o formato "DD-MM-AAAA"
+    char padronizada[11];
+    strncpy(padronizada, &data[6], 4);  // Copiar o ano
+    padronizada[4] = '-';
+    strncpy(&padronizada[5], &data[3], 2);  // Copiar o mês
+    padronizada[7] = '-';
+    strncpy(&padronizada[8], data, 2);  // Copiar o dia
+    padronizada[10] = '\0';
+    
+    // Atualizar a string de data original
+    strcpy(data, padronizada);
+    
+    return true;
 }
 
-void padronizarData(char data[]) {
-    int dia, mes, ano;
-    for(int i = 0; i<strlen(data); i++){
-        printf("%c", data[i]);
-    }
-    printf("\n");
-}
-
-//ler arquivo
-
-Personagem* ler(Personagem* personagem, char* filename, char* id_procurado) {
-    //leitura do arquivo
-    FILE* file = fopen(filename, "r");
+// Função para ler um Personagem do arquivo
+Personagem* lerPersonagem(const char *filename, const char *id_procurado) {
+    FILE *file = fopen(filename, "r");
     if (file == NULL) {
-        printf("\nERROR: File Not Found.\n");
-    } else {
-        char line[500];
-        bool idFound = false;
-
-        fgets(line, sizeof(line), file);
-        int na = 0;
-        while (fgets(line, sizeof(line), file) != NULL && !idFound) {
-            char *atributos[18];
-            char auxline[500] = {0};
-            int col = 0;
-            int t = 0;
-            int k = 0;
-            int index = 0;
-            char *token = strtok(line, ";");
-            int execvar = 0;
-            na++;
-            int debug= 0;
-            while (token != NULL) {
-                debug++;
-                execvar++;
-                atributos[index++] = strdup(token);
-                token = strtok(NULL, ";");
-            }
-        //variavel auxiliar para trocar o [] por {}
-        char aux[500] = {0};
-        int j = 0;
-        for (int i = 0; i < strlen(atributos[2]); i++) {
-            if (atributos[2][i] == '[') {
-                aux[j] = '{';
-            } else if (atributos[2][i] == ']') {
-                aux[j] = '}';
-            } else if (atributos[2][i] == '\'') {
-                continue; 
-            } else {
-                aux[j] = atributos[2][i];
-            }
-            j++; 
-        }
-        aux[j] = '\0'; 
-
-        free(atributos[2]); 
-        atributos[2] = strdup(aux);
-            //comparação entre a primeira coluna e o id colocado pelo usuario
-            if (strcmp(atributos[0], id_procurado) == 0) {
-                if(execvar < 18){
-                    if(execvar>16){
-                    newPersonagem(personagem,atributos[0], atributos[1], atributos[2], atributos[3],atributos[4], atributos[5], "null" ,strcmp(atributos[6], "true") == 0,strcmp(atributos[7], "true") == 0,atributos[8], strcmp(atributos[9], "true") == 0,atributos[10], atributos[11],atoi(atributos[12]), atributos[13], atributos[14],atributos[15], strcmp(atributos[16], "true") == 0);
-                    } else{
-                    newPersonagem(personagem,atributos[0], atributos[1], atributos[2], atributos[3],atributos[4], atributos[5], "null" ,strcmp(atributos[6], "true") == 0,strcmp(atributos[7], "true") == 0,"null", strcmp(atributos[8], "true") == 0,atributos[9], atributos[10],atoi(atributos[11]), atributos[12], atributos[13],atributos[14], strcmp(atributos[15], "true") == 0);
-                    }
-                }else{
-                    newPersonagem(personagem,atributos[0], atributos[1], atributos[2], atributos[3],atributos[4], atributos[5], atributos[6],strcmp(atributos[7], "true") == 0,strcmp(atributos[8], "true") == 0,atributos[9], strcmp(atributos[10], "true") == 0,atributos[11], atributos[12],atoi(atributos[13]), atributos[14], atributos[15],atributos[16], strcmp(atributos[17], "true") == 0);
-                }
-                idFound = true;
-                return personagem;
-            }
-
-            // liberar memoria
-            for (int x = 0; x < index; x++) {
-                free(atributos[x]);
-            }
-        }
-        //fechar arquivo
-        fclose(file);
+        printf("Erro ao abrir o arquivo.\n");
+        return NULL;
     }
+
+    char line[500];
+    fgets(line, sizeof(line), file); // Ignorar a linha de cabeçalho
+
+    while (fgets(line, sizeof(line), file) != NULL) {
+        char *atributos[18];
+        int index = 0;
+
+        char *token = strtok(line, ";");
+        while (token != NULL) {
+            atributos[index++] = strdup(token);
+            token = strtok(NULL, ";");
+        }
+
+        // Verificar se o ID corresponde ao procurado
+        if (strcmp(atributos[0], id_procurado) == 0) {
+            Personagem *personagem = (Personagem*)malloc(sizeof(Personagem));
+            personagem->id = strdup(atributos[0]);
+            personagem->name = strdup(atributos[1]);
+            personagem->alternateNames = strdup(atributos[2]);
+            personagem->house = strdup(atributos[3]);
+            personagem->ancestry = strdup(atributos[4]);
+            personagem->species = strdup(atributos[5]);
+            personagem->patronus = strdup(strcmp(atributos[6], "null") == 0 ? "" : atributos[6]);
+            personagem->hogwartsStaff = strcmp(atributos[7], "true") == 0;
+            personagem->hogwartsStudent = strcmp(atributos[8], "true") == 0;
+            personagem->actorName = strdup(atributos[9]);
+            personagem->alive = strcmp(atributos[10], "true") == 0;
+            personagem->alternateActors = strdup(atributos[11]);
+            personagem->dateOfBirth = strdup(atributos[12]);
+            personagem->yearOfBirth = atoi(atributos[13]);
+            personagem->eyeColour = strdup(atributos[14]);
+            personagem->gender = strdup(atributos[15]);
+            personagem->hairColour = strdup(atributos[16]);
+            personagem->wizard = strcmp(atributos[17], "true") == 0;
+
+            // Liberar memória alocada para atributos temporários
+            for (int i = 0; i < index; i++) {
+                free(atributos[i]);
+            }
+
+            fclose(file);
+            return personagem;
+        }
+
+        // Liberar memória alocada para atributos temporários
+        for (int i = 0; i < index; i++) {
+            free(atributos[i]);
+        }
+    }
+
+    fclose(file);
+    printf("Personagem com o ID '%s' não encontrado.\n", id_procurado);
+    return NULL;
 }
 
-void ordenacaoSelecao(Personagem *personagem, int tamanho){
+// Função para ordenação por seleção
+void ordenacaoSelecao(Personagem *personagem, int tamanho) {
     int n = tamanho;
     for (int i = 0; i < (n - 1); i++) {
-      int menor = i;
-      for (int j = (i + 1); j < n; j++){
-         if (strcmp(personagem[menor].name,personagem[j].name) > 0 ){
-            menor = j;
-         }
-      }
-      Personagem temp = personagem[i];
-      personagem[i] = personagem[menor];
-      personagem[menor] = temp;
-   }
+        int menor = i;
+        for (int j = (i + 1); j < n; j++) {
+            if (strcmp(personagem[menor].name, personagem[j].name) > 0) {
+                menor = j;
+            }
+        }
+        Personagem temp = personagem[i];
+        personagem[i] = personagem[menor];
+        personagem[menor] = temp;
+    }
 }
 
+// Função para liberar a memória alocada para um Personagem
 void liberarMemoriaPersonagem(Personagem *p) {
-    // Libera memória para todos os campos de string dentro da estrutura Personagem
-    free(p->id);
-    free(p->name);
-    free(p->alternateNames);
-    free(p->house);
-    free(p->ancestry);
-    free(p->species);
-    free(p->patronus);
-    free(p->actorName);
-    free(p->alternateActors);
-    free(p->dateOfBirth);
-    free(p->eyeColour);
-    free(p->gender);
-    free(p->hairColour);
+    if (p != NULL) {
+        free(p->id);
+        free(p->name);
+        free(p->alternateNames);
+        free(p->house);
+        free(p->ancestry);
+        free(p->species);
+        free(p->patronus);
+        free(p->actorName);
+        free(p->alternateActors);
+        free(p->dateOfBirth);
+        free(p->eyeColour);
+        free(p->gender);
+        free(p->hairColour);
+        free(p);
+    }
 }
 
 int main(){
     //alocando local de memoria para o personagem
     setlocale(LC_CTYPE, "UTF-8"); 
 
-    Personagem* personagem = (Personagem*) malloc (sizeof(Personagem));
+    Personagem* personagem = (Personagem*) malloc (50 * sizeof(Personagem));
     char* path = "/tmp/characters.csv"; 
     char id[81];
 
@@ -387,12 +407,8 @@ int main(){
     Personagem* tmp = (Personagem*) malloc (sizeof(Personagem));
 
     while( strcmp( id,"FIM" ) != 0 ){
-        
-        //Realocar espaço para o próximo personagem
-        personagem = realloc(personagem, (n + 1) * sizeof(Personagem));
-
         // Ler o personagem e aumentar o contador
-        tmp = ler( personagem, path, id );
+        tmp = lerPersonagem("/tmp/characters.csv", id);
         personagem[n] = *tmp;
         n++;
 
@@ -413,33 +429,33 @@ int main(){
     //ler o nome e limpar o buffer
     fgets(nome, sizeof(nome), stdin);
     getchar( );
-    while ( strcmp( nome,"FIM" ) != 0 )
-    {
-        //pesquisa binaria
+     while (strcmp(nome, "FIM\n") != 0) { // Corrigido para verificar "FIM\n"
+        // Pesquisa binária
         int inicio = 0, fim = n - 1;
+        bool encontrado = false; // Flag para indicar se o nome foi encontrado
 
-        while(inicio <= fim){
+        while (inicio <= fim) {
             int meio = (inicio + fim) / 2;
-
             int found = strcmp(nome, personagem[meio].name);
 
-            if(found == 0){
+            if (found == 0) {
+                encontrado = true;
                 printf("\nSIM");
                 break;
-            } 
-            else if(found < 0){
+            } else if (found < 0) {
                 fim = meio - 1;
-            }
-            else{
-                inicio = meio - 1;
+            } else {
+                inicio = meio + 1; // Corrigido para +1
             }
         }
 
-        printf("\nNAO");
-       
-       //ler o nome e limpar o buffer
+        if (!encontrado) { // Se o nome não foi encontrado
+            printf("\nNAO");
+        }
+
+        // Ler o próximo nome e limpar o buffer
         fgets(nome, sizeof(nome), stdin);
-        getchar( );
+        getchar();
     }
 
     // Liberar memória alocada para cada personagem
