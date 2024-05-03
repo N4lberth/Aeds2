@@ -338,34 +338,29 @@ Personagem ler(Personagem* personagem, char* filename, char* id_procurado) {
     }
 }
 
-void shellsort(Personagem *array, int n) {
-    int h = 1;
-
-    do { h = (h * 3) + 1; } while (h < n);
-
-    do {
-        h /= 3;
-        for(int cor = 0; cor < h; cor++){
-            insercaoPorCor(array, n, cor, h);
+void selecaoRecursiva(Personagem *array, int n) {
+    if (!n == 0) {
+        int maior = 0;
+        for (int j = 1; j < n; j++) {
+            comparacoes++;
+            if (strcmp(array[maior].name, array[j].name) < 0) {
+                maior = j;
+            }
         }
-    } while (h != 1);
-}
-
-void insercaoPorCor(Personagem *array, int n, int cor, int h){
-    for (int i = (h + cor); i < n; i+=h) {
-        Personagem tmp = array[i];
-        int j = i - h;
-        while ((j >= 0) && (strcmp(array[j].eyeColour, tmp.eyeColour) > 0)) {
-            array[j + h] = array[j];
-            j-=h;
-        }
-        array[j + h] = tmp;
+        Personagem tmp = array[maior];
+        array[maior] = array[n-1];
+        array[n-1] = tmp;
+        movimentacoes++;
+        selecaoRecursiva(array, n-1);
+    }
+    else{
+        return;
     }
 }
 
 void escreverLog(int comparacoes, int movimentacoes, long tempoExecucao) {
     char matricula[] = "811197";
-    char nomeArquivo[] = "matrícula_quicksort.txt";
+    char nomeArquivo[] = "matrícula_selcaoRecursiva.txt";
 
     FILE *arquivo;
     arquivo = fopen(nomeArquivo, "w");
@@ -407,7 +402,7 @@ int main(){
 
     inicio = clock();
     
-    ordenacaoSelecao(personagem, n);
+    selecaoRecursiva(personagem, n);
 
     fim = clock();
     tempoExecucao = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
