@@ -377,6 +377,7 @@ int main(){
     setlocale(LC_CTYPE, "UTF-8"); 
 
     Personagem* personagem = (Personagem*) malloc ( 50 * sizeof(Personagem) );
+    Personagem* tmp = (Personagem*) malloc (sizeof(Personagem));
     char* path = "/tmp/characters.csv"; 
     char id[81];
 
@@ -386,12 +387,12 @@ int main(){
     //limpar buffer
     getchar( );
 
-    int n =0;
+    int n = 0;
     while( strcmp( id,"FIM" ) != 0 ){
-        personagem[n] = ler( personagem, path, id );
-        n++;
+        personagem[n] = ler( tmp, path, id );
         scanf( "%s", id ); 
         getchar( );
+        n++;
     } 
     
     quicksort(personagem, n);
@@ -407,6 +408,7 @@ int main(){
     
     //liberar memoria alocada
     free( personagem );
+    free( tmp );
     personagem = NULL;
     return 0;
 }
