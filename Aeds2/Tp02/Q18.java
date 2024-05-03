@@ -357,11 +357,12 @@ public class Q18 {
     }
 
     public static Personagem[] quicksort(Personagem[] array, int esq, int dir) {
+        int k = 10;
         int i = esq, j = dir;
         Personagem pivo = array[(dir+esq)/2];
         while (i <= j) {
-            while (array[i].getHouse().compareTo(pivo.getHouse()) < 0 || array[i].getHouse().compareTo(pivo.getHouse()) == 0 && array[i].getName().compareTo(pivo.getName()) < 0) i++;
-            while (array[i].getHouse().compareTo(pivo.getHouse()) > 0 || array[i].getHouse().compareTo(pivo.getHouse()) == 0 && array[i].getName().compareTo(pivo.getName()) > 0) j--;
+            while (i < k && array[i].getHouse().compareTo(pivo.getHouse()) < 0 || array[i].getHouse().compareTo(pivo.getHouse()) == 0 && array[i].getName().compareTo(pivo.getName()) < 0) i++;
+            while (j > k && array[i].getHouse().compareTo(pivo.getHouse()) > 0 || array[i].getHouse().compareTo(pivo.getHouse()) == 0 && array[i].getName().compareTo(pivo.getName()) > 0) j--;
             if (i <= j) {
                 Personagem temp = array[i];
                 array[i] = array[j];
@@ -424,12 +425,12 @@ public class Q18 {
         int k = 10;
 
         //ordenar arrey
-        registros = quicksort(registros,0 , n-1);
+        registros = quicksort(registros, 0, n - 1);
 
         //imprimir registros
         int x = 0;
         
-        while ( x < k) {
+        while (x < k) {
             registros[x].imprimir();
             x++;
         }
