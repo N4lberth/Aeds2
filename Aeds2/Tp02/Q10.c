@@ -6,6 +6,9 @@
 #include <wchar.h>   
 #include <locale.h>  
 
+int comparacoes = 0;
+int movimentacoes = 0;
+
 typedef struct s_Personagem
 {
 char*   id              ; 
@@ -339,12 +342,14 @@ void quicksortRec(Personagem *array, int esq, int dir) {
     int i = esq, j = dir;
     Personagem pivo = array[(dir+esq)/2];
     while (i <= j) {
-        while (strcmp(array[i].house, pivo.house) < 0) i++;
-        while (strcmp(array[j].house, pivo.house) > 0) j--;
+        while (strcmp(array[i].house, pivo.house) < 0) i++; comparacoes++;
+        while (strcmp(array[j].house, pivo.house) > 0) j--; comparacoes++;
         if (i <= j) {
             Personagem tmp = array[i];
             array[i] = array[j];
             array[j] = tmp;
+            movimentacoes++;
+            comparacoes++;
             i++;
             j--;
         }
@@ -372,6 +377,22 @@ void ordenarPorNome(Personagem array[], int tamanho) {
     }
 }
 
+void escreverLog(int comparacoes, int movimentacoes, long tempoExecucao) {
+    char matricula[] = "811197";
+    char nomeArquivo[] = "matrícula_quicksort.txt";
+
+    FILE *arquivo;
+    arquivo = fopen(nomeArquivo, "w");
+
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo.");
+        return;
+    }
+
+    fprintf(arquivo, "%s\t%d\t%d\t%ld\n", matricula, comparacoes, movimentacoes, tempoExecucao);
+    fclose(arquivo);
+}
+
 int main(){
     //alocando local de memoria para o personagem
     setlocale(LC_CTYPE, "UTF-8"); 
@@ -394,10 +415,17 @@ int main(){
         getchar( );
         n++;
     } 
+
+    clock_t inicio, fim;
+    double tempoExecucao;
+
+    inicio = clock();
     
     quicksort(personagem, n);
-
     ordenarPorNome(personagem, n);
+
+    fim = clock();
+    tempoExecucao = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
 
     int j = 0;
     while (j < n)
@@ -410,5 +438,7 @@ int main(){
     free( personagem );
     free( tmp );
     personagem = NULL;
+
+    escreverLog(comparacoes, movimentacoes, tempoExecucao);
     return 0;
 }
