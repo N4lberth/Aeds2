@@ -6,6 +6,9 @@
 #include <wchar.h>   
 #include <locale.h>  
 
+int comparacoes = 0;
+int movimentacoes = 0;
+
 typedef struct s_Personagem
 {
 char*   id              ; 
@@ -314,12 +317,12 @@ Personagem ler(Personagem* personagem, char* filename, char* id_procurado) {
             if (strcmp(atributos[0], id_procurado) == 0) {
                 if(execvar < 18){
                     if(execvar>16){
-                    newPersonagem(personagem,atributos[0], atributos[1], atributos[2], atributos[3],atributos[4], atributos[5], "null" ,strcmp(atributos[6], "true") == 0,strcmp(atributos[7], "true") == 0,atributos[8], strcmp(atributos[9], "true") == 0,atributos[10], atributos[11],atoi(atributos[12]), atributos[13], atributos[14],atributos[15], strcmp(atributos[16], "true") == 0);
+                    newPersonagem(personagem,atributos[0], atributos[1], atributos[2], atributos[3],atributos[4], atributos[5], "null" ,strlen(atributos[6]) > 7,strlen(atributos[7]) > 7,atributos[8], strlen(atributos[9]) > 7,atributos[10], atributos[11],atoi(atributos[12]), atributos[13], atributos[14],atributos[15], strlen(atributos[16]) > 7);
                     } else{
-                    newPersonagem(personagem,atributos[0], atributos[1], atributos[2], atributos[3],atributos[4], atributos[5], "null" ,strcmp(atributos[6], "true") == 0,strcmp(atributos[7], "true") == 0,"null", strcmp(atributos[8], "true") == 0,atributos[9], atributos[10],atoi(atributos[11]), atributos[12], atributos[13],atributos[14], strcmp(atributos[15], "true") == 0);
+                    newPersonagem(personagem,atributos[0], atributos[1], atributos[2], atributos[3],atributos[4], atributos[5], "null" ,strlen(atributos[6]) > 7,strlen(atributos[7]) > 7,"null", strlen(atributos[8]) > 7,atributos[9], atributos[10],atoi(atributos[11]), atributos[12], atributos[13],atributos[14], strlen(atributos[15]) > 7);
                     }
                 }else{
-                    newPersonagem(personagem,atributos[0], atributos[1], atributos[2], atributos[3],atributos[4], atributos[5], atributos[6],strcmp(atributos[7], "true") == 0,strcmp(atributos[8], "true") == 0,atributos[9], strcmp(atributos[10], "true") == 0,atributos[11], atributos[12],atoi(atributos[13]), atributos[14], atributos[15],atributos[16], strcmp(atributos[17], "true") == 0);
+                    newPersonagem(personagem,atributos[0], atributos[1], atributos[2], atributos[3],atributos[4], atributos[5], atributos[6],strlen(atributos[7]) > 7,strlen(atributos[8]) > 7,atributos[9], strlen(atributos[10]) > 7,atributos[11], atributos[12],atoi(atributos[13]), atributos[14], atributos[15],atributos[16], strlen(atributos[17]) > 7);
                 }
                 idFound = true;
                 return *personagem;
@@ -335,26 +338,62 @@ Personagem ler(Personagem* personagem, char* filename, char* id_procurado) {
     }
 }
 
-    void quicksortRec(Personagem *array, int esq, int dir) {
-    int i = esq, j = dir;
-    Personagem pivo = array[(dir+esq)/2];
-    while (i <= j) {
-        while (strcmp(array[i].name, pivo.name) < 0) i++;
-        while (strcmp(array[j].name, pivo.name) > 0) j--;
-        if (i <= j) {
-            Personagem tmp = array[i];
-            array[i] = array[j];
-            array[j] = tmp;
-            i++;
-            j--;
+void shellsort(Personagem *array, int n) {
+    int h = 1;
+
+    do { h = (h * 3) + 1; } while (h < n);
+
+    do {
+        h /= 3;
+        for(int cor = 0; cor < h; cor++){
+            insercaoPorCor(array, n, cor, h);
         }
-    }
-    if (esq < j)  quicksortRec(array, esq, j);
-    if (i < dir)  quicksortRec(array, i, dir);
+    } while (h != 1);
 }
 
-void quicksort(Personagem *array, int n) {
-    quicksortRec(array, 0, n-1);
+void insercaoPorCor(Personagem *array, int n, int cor, int h){
+    for (int i = (h + cor); i < n; i+=h) {
+        Personagem tmp = array[i];
+        int j = i - h;
+        while ((j >= 0) && (strcmp(array[j].eyeColour, tmp.eyeColour) > 0)) {
+            array[j + h] = array[j];
+            j-=h;
+            comparacoes++;
+            movimentacoes++;
+        }
+        array[j + h] = tmp;
+        movimentacoes++;
+    }
+}
+
+void ordenarPorNome(Personagem array[], int tamanho) {
+    for (int i = 1; i < tamanho; i++) {
+        if (strcmp(array[i].eyeColour, array[i - 1].eyeColour) == 0) {
+            int j = i;
+            while (j > 0 && strcmp(array[j].eyeColour, array[j - 1].eyeColour) == 0 && strcmp(array[j].name, array[j - 1].name) < 0) {
+                Personagem tmp = array[j];
+                array[j] = array[j - 1];
+                array[j - 1] = tmp;
+                j--;
+            }
+        }
+    }
+}
+
+void escreverLog(int comparacoes, int movimentacoes, long tempoExecucao) {
+    char matricula[] = "811197";
+    char nomeArquivo[] = "matrícula_shellsort.txt";
+
+    FILE *arquivo;
+    arquivo = fopen(nomeArquivo, "w");
+
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo.");
+        return;
+    }
+
+    fprintf(arquivo, "%s\t%d\t%d\t%ld\n", matricula, comparacoes, movimentacoes, tempoExecucao);
+    fclose(arquivo);
 }
 
 int main(){
@@ -362,7 +401,7 @@ int main(){
     setlocale(LC_CTYPE, "UTF-8"); 
 
     Personagem* personagem = (Personagem*) malloc ( 50 * sizeof(Personagem) );
-    Personagem* tmp = (Personagem*) malloc ( sizeof(Personagem) );
+    Personagem* tmp = (Personagem*) malloc (sizeof(Personagem));
     char* path = "/tmp/characters.csv"; 
     char id[81];
 
@@ -372,53 +411,37 @@ int main(){
     //limpar buffer
     getchar( );
 
-    int n =0;
+    int n = 0;
     while( strcmp( id,"FIM" ) != 0 ){
         personagem[n] = ler( tmp, path, id );
-        n++;
         scanf( "%s", id ); 
         getchar( );
+        n++;
     } 
+
+    clock_t inicio, fim;
+    double tempoExecucao;
+
+    inicio = clock();
     
-    //ordenar array
-    quicksort(personagem, n);
+    shellsort(personagem, n);
+    ordenarPorNome(personagem, n);
 
-    //ler os nomes para pesquisa binaria
-    char nome[100];
-    fgets(nome, sizeof(nome), stdin);
+    fim = clock();
+    tempoExecucao = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
 
-    //lipar buffer
-    getchar( );
-
-    while( strcmp( nome,"FIM" ) != 0 ){
-        int esq = 0, drt = n-1;
-        bool encontrado = false;
-        while (esq <= drt) {
-            int meio = (esq + drt) / 2;
-            int found = strcmp(nome, personagem[meio].name);
-
-            if (found == 0) {
-                puts("SIM\n");
-                encontrado = true;
-                break;
-            } else if (found < 0) {
-                esq = meio - 1;
-            } else {
-                drt = meio + 1; 
-            }
-        }
-        if (!encontrado) {  
-            // Se o nome não foi encontrado
-            puts("NAO\n");
-        }
-
-        fgets(nome, sizeof(nome), stdin);
-        getchar( );
-    } 
+    int j = 0;
+    while (j < n)
+    {
+        imprimir(&personagem[j]);
+        j++;
+    }
     
     //liberar memoria alocada
-    free( tmp );
     free( personagem );
+    free( tmp );
     personagem = NULL;
+
+    escreverLog(comparacoes, movimentacoes, tempoExecucao);
     return 0;
 }
