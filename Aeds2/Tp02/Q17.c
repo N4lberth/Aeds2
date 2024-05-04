@@ -338,76 +338,84 @@ Personagem ler(Personagem* personagem, char* filename, char* id_procurado) {
     }
 }
 
-void heapsort(Personagem* array, int n, int k) {
-    //Alterar o vetor ignorando a posicao zero
-    Personagem arrayTmp[n+1];
-    for(int i = 0; i < n; i++){
-        arrayTmp[i+1] = array[i];
-    }
-
-    //Contrucao do heap
-    for(int tamHeap = 2; tamHeap <= n; tamHeap++){
-        construir(arrayTmp, tamHeap);
-    }
-    
-    //Ordenacao propriamente dita
-    int tamHeap = k;
-    while(tamHeap > 1){
-        Personagem temp = arrayTmp[1];
-        arrayTmp[1] = arrayTmp[tamHeap];
-        arrayTmp[tamHeap] = temp;
-        reconstruir(arrayTmp, tamHeap);
-    }
-
-    //Alterar o vetor para voltar a posicao zero
-    for(int i = 0; i < n; i++){
-        array[i] = arrayTmp[i+1];
-    }
+void swap(Personagem array[], int i, int j)
+{
+    Personagem temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
 }
 
-void construir(Personagem* array, int tamHeap){
-    for(int i = tamHeap; i > 1; i /= 2){
-        if(strcmp(array[i].hairColour, array[i/2].hairColour) > 0  
-            || strcmp(array[i].hairColour, array[i/2].hairColour) == 0
-            && strcmp(array[i].name, array[i/2].name) > 0){
-                Personagem temp= array[i];
-                array[i] = array[i/2];
-                array[i/2] = temp;
-        } else{
+void constroi(Personagem *personagem, int tamHeap, int i) {
+    while (i > 1) {
+        int pai = i / 2;
+        if (strcmp(personagem[i].hairColour, personagem[pai].hairColour) > 0 || 
+           (strcmp(personagem[i].hairColour, personagem[pai].hairColour) == 0 &&
+            strcmp(personagem[i].name, personagem[pai].name) > 0)) {
+            swap(personagem, i, pai);
+            i = pai;
+        } else {
             break;
         }
     }
 }
 
-void reconstruir(Personagem *array, int tamHeap){
+int getMaiorFilho(Personagem *personagem, int i, int tamHeap) {
+    int filhoEsq = 2 * i;
+    int filhoDir = 2 * i + 1;
+    if (filhoDir > tamHeap) return filhoEsq; // Sem filho direito
+    if (strcmp(personagem[filhoEsq].hairColour, personagem[filhoDir].hairColour) > 0 || 
+       (strcmp(personagem[filhoEsq].hairColour, personagem[filhoDir].hairColour) == 0 &&
+        strcmp(personagem[filhoEsq].name, personagem[filhoDir].name) > 0)) {
+        return filhoEsq;
+    } else {
+        return filhoDir;
+    }
+}
+
+void reconstroi(Personagem *personagem, int tamHeap) {
     int i = 1;
-    while(i <= (tamHeap/2)){
-        int filho = getMaiorFilho(array, i, tamHeap);
-        if(strcmp(array[i].hairColour, array[i/2].hairColour) < 0  
-                || strcmp(array[i].hairColour, array[i/2].hairColour) == 0
-                && strcmp(array[i].name, array[i/2].name) < 0){
-
-            Personagem temp= array[i];
-            array[i] = array[filho];
-            array[filho] = temp;
+    while (i <= (tamHeap / 2)) {
+        int filho = getMaiorFilho(personagem, i, tamHeap);
+        if (strcmp(personagem[i].hairColour, personagem[filho].hairColour) < 0 ||
+           (strcmp(personagem[i].hairColour, personagem[filho].hairColour) == 0 &&
+            strcmp(personagem[i].name, personagem[filho].name) < 0)) {
+            swap(personagem, i, filho);
             i = filho;
-
-        }else{
-            i = tamHeap;
+        } else {
+            break;
         }
     }
 }
 
-int getMaiorFilho(Personagem *array, int i, int tamHeap){
-    int filho;
-    if (2*i == tamHeap || strcmp(array[i*2].hairColour, array[2*i+1].hairColour) > 0  
-            || strcmp(array[i*2].hairColour, array[2*i+1].hairColour) == 0
-            && strcmp(array[i*2].name, array[2*i+1].name) > 0){
-        filho = 2*i;
-    } else {
-        filho = 2*i + 1;
+void heapsortParcial(Personagem *personagem, int n) {
+    Personagem* tmp = (Personagem*) malloc((n+1) * sizeof(Personagem));
+    for (int i = 0; i < n; i++) {
+        tmp[i+1] = personagem[i];
     }
-    return filho;
+
+    int k = 10;
+    for (int tamHeap = 2; tamHeap <= k; tamHeap++) {
+        constroi(tmp, tamHeap, tamHeap);
+    }
+
+    for (int i = k + 1; i <= n; i++) {
+        if (strcmp(tmp[i].hairColour, tmp[1].hairColour) < 0) {
+            swap(tmp, i, 1);
+            reconstroi(tmp, 10);
+        }
+    }
+
+    int tamHeap = k;
+    while (tamHeap > 1) {
+        swap(tmp, 1, tamHeap);
+        tamHeap--;
+        reconstroi(tmp, tamHeap);
+    }
+
+    for (int i = 0; i < n; i++) {
+        personagem[i] = tmp[i+1];
+    }
+    free(tmp);
 }
 
 void escreverLog(int comparacoes, int movimentacoes, long tempoExecucao) {
@@ -455,7 +463,7 @@ int main(){
     inicio = clock();
     
     int k = 10;
-    heapsort(personagem, n, k);
+    heapsortParcial(personagem, n);
 
     fim = clock();
     tempoExecucao = ((double)(fim - inicio)) / CLOCKS_PER_SEC;

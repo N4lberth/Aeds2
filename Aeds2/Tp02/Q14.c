@@ -338,54 +338,53 @@ Personagem ler(Personagem* personagem, char* filename, char* id_procurado) {
     }
 }
 
-void radixsort(Personagem *array, int n) {
-    //Array para contar o numero de ocorrencias de cada elemento
-    Personagem* tmp = (Personagem*) malloc (sizeof(Personagem));
-    Personagem max = *tmp;
-    getMax(array, n, tmp);
-    for (int exp = 1; (int)max.id/exp > 0; exp *= 10) {
-        radcountingSort(array, n, exp);
-    }
-    free(tmp);
+void swap(Personagem array[], int i, int j)
+{
+    Personagem temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
 }
 
-void getMax(Personagem *array, int n, Personagem* max) {
-    Personagem maior = array[0];
-
+int getMax(Personagem arr[], int n) {
+    int max = strlen(arr[0].id);
     for (int i = 1; i < n; i++) {
-        if(strcmp(maior.id, array[i].id) < 0){
-            maior = array[i];
+        int len = strlen(arr[i].id);
+        if (len > max) {
+            max = len;
         }
     }
-    *max = maior;
+    return max;
 }
 
-void radcountingSort(Personagem *array, int n, int exp) {
-    int count[10];
-    Personagem output[n+1];
+void countSort(Personagem arr[], int n, int exp) {
+    Personagem output[n]; 
+    int count[256] = {0};
 
-    //Inicializar cada posicao do array de contagem 
-    for (int i = 0; i < 10; count[i] = 0, i++);
-
-    //Agora, o count[i] contem o numero de elemento iguais a i
     for (int i = 0; i < n; i++) {
-        count[((int)array[i].id / exp) % 10]++;
+        int index = (strlen(arr[i].id) - exp >= 0) ? (arr[i].id[strlen(arr[i].id) - exp]) : 0;
+        count[index]++;
     }
 
-    //Agora, o count[i] contem o numero de elemento menores ou iguais a i
-    for (int i = 1; i < 10; i++) {
-        count[i] += count[i-1];
+    for (int i = 1; i < 256; i++) {
+        count[i] += count[i - 1];
     }
 
-    //Ordenando 
-    for (int i = n-1; i >= 0; i--) {
-        output[count[((int)array[i].id/exp) % 10] - 1] = array[i];
-        count[((int)array[i].id/exp) % 10]--;
+    for (int i = n - 1; i >= 0; i--) {
+        int index = (strlen(arr[i].id) - exp >= 0) ? (arr[i].id[strlen(arr[i].id) - exp]) : 0;
+        output[count[index] - 1] = arr[i];
+        count[index]--;
     }
 
-    //Copiando para o array original
     for (int i = 0; i < n; i++) {
-        array[i] = output[i];
+        arr[i] = output[i];
+    }
+}
+
+void radixSort(Personagem arr[], int n) {
+    int max = getMax(arr, n);
+
+    for (int exp = 1; exp <= max; exp++) {
+        countSort(arr, n, exp);
     }
 }
 
@@ -433,7 +432,7 @@ int main(){
 
     inicio = clock();
     
-    radixsort(personagem, n);
+    radixSort(personagem, n);
 
     fim = clock();
     tempoExecucao = ((double)(fim - inicio)) / CLOCKS_PER_SEC;

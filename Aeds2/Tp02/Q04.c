@@ -335,26 +335,37 @@ Personagem ler(Personagem* personagem, char* filename, char* id_procurado) {
     }
 }
 
-    void quicksortRec(Personagem *array, int esq, int dir) {
-    int i = esq, j = dir;
-    Personagem pivo = array[(dir+esq)/2];
-    while (i <= j) {
-        while (strcmp(array[i].name, pivo.name) < 0) i++;
-        while (strcmp(array[j].name, pivo.name) > 0) j--;
-        if (i <= j) {
-            Personagem tmp = array[i];
-            array[i] = array[j];
-            array[j] = tmp;
-            i++;
-            j--;
+int pesquisaBinaria(Personagem *personagens, char *nome, int esq, int dir){
+    if(esq > dir){
+        return -1;
+    }else{
+        int meio = (esq + dir) / 2;
+        if(strcmp(nome, personagens[meio].name) == 0){
+            return 1;
+        }
+        else if (strcmp(nome, personagens[meio].name) > 0)
+        {
+            return pesquisaBinaria(personagens, nome, meio + 1, dir);
+        }
+        else
+        {
+            return pesquisaBinaria(personagens, nome, esq, meio - 1);
         }
     }
-    if (esq < j)  quicksortRec(array, esq, j);
-    if (i < dir)  quicksortRec(array, i, dir);
 }
 
-void quicksort(Personagem *array, int n) {
-    quicksortRec(array, 0, n-1);
+void ordenar(Personagem *personagens, int n){
+    for (int i = 0; i < n; i++){
+        int menor = i;
+        for (int j = i + 1; j < n; j++){
+            if(strcmp(personagens[j].name, personagens[menor].name) < 0){
+                menor = j;
+            }
+        }
+        Personagem temp = personagens[i];
+        personagens[i] = personagens[menor];
+        personagens[menor] = temp;
+    }
 }
 
 int main(){
@@ -381,40 +392,17 @@ int main(){
     } 
     
     //ordenar array
-    quicksort(personagem, n);
-
+    ordenar(personagem, n);
     //ler os nomes para pesquisa binaria
     char nome[100];
     fgets(nome, sizeof(nome), stdin);
 
-    //lipar buffer
-    getchar( );
 
-    while( strcmp( nome,"FIM" ) != 0 ){
-        int esq = 0, drt = n-1;
-        bool encontrado = false;
-        while (esq <= drt) {
-            int meio = (esq + drt) / 2;
-            int found = strcmp(nome, personagem[meio].name);
-
-            if (found == 0) {
-                puts("SIM\n");
-                encontrado = true;
-                break;
-            } else if (found < 0) {
-                esq = meio - 1;
-            } else {
-                drt = meio + 1; 
-            }
-        }
-        if (!encontrado) {  
-            // Se o nome não foi encontrado
-            puts("NAO\n");
-        }
-
-        fgets(nome, sizeof(nome), stdin);
-        getchar( );
-    } 
+    scanf(" %[^\r\n]s", nome);
+    while(strcmp(nome, "FIM") != 0){
+        printf("%s\n", pesquisaBinaria(personagem, nome, 0, n-1) == 1 ? "SIM" : "NAO");
+        scanf(" %[^\r\n]s", nome);
+    }
     
     //liberar memoria alocada
     free( tmp );
